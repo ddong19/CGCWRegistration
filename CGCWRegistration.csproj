@@ -157,11 +157,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LanguageController.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DAL\LanguageRepository\ILanguageRepository.cs" />
     <Compile Include="DAL\LanguageRepository\LanguageRepository.cs" />
+    <Compile Include="DAL\QuestionRepository\IQuestionRepository.cs" />
+    <Compile Include="DAL\QuestionRepository\QuestionRepository.cs" />
     <Compile Include="DAL\RegistrationContext.cs" />
     <Compile Include="DAL\RegistrationInitializer.cs" />
+    <Compile Include="DAL\ResponseOptionRepository\IResponseOptionRepository.cs" />
+    <Compile Include="DAL\ResponseOptionRepository\ResponseOptionRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,11 +236,10 @@
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Language\Index.cshtml" />
+    <None Include="Views\Question\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="DAL\QuestionRepository\" />
-    <Folder Include="DAL\ResponseOptionRepository\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

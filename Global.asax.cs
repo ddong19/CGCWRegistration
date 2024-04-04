@@ -12,6 +12,9 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using System.Reflection;
 using CGCWRegistration.DAL.LanguageRepository;
+using CGCWRegistration.DAL.QuestionRepository;
+using CGCWRegistration.Models;
+using CGCWRegistration.DAL.ResponseOptionRepository;
 
 namespace CGCWRegistration
 {
@@ -29,7 +32,10 @@ namespace CGCWRegistration
             builder.RegisterType<RegistrationContext>()
                    .WithParameter("connectionString", ConfigurationManager.ConnectionStrings["RegistrationContext"].ConnectionString)
                    .InstancePerRequest();
+
             builder.RegisterType<LanguageRepository>().As<ILanguageRepository>();
+            builder.RegisterType<QuestionRepository>().As<IQuestionRepository>();
+            builder.RegisterType<ResponseOptionRepository>().As<ResponseOptionRepository>();
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
