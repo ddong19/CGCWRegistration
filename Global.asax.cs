@@ -15,6 +15,9 @@ using CGCWRegistration.DAL.LanguageRepository;
 using CGCWRegistration.DAL.QuestionRepository;
 using CGCWRegistration.Models;
 using CGCWRegistration.DAL.ResponseOptionRepository;
+using CGCWRegistration.DAL.AgeRangeRepository;
+using CGCWRegistration.DAL.UserRepository;
+using CGCWRegistration.BLL;
 
 namespace CGCWRegistration
 {
@@ -35,7 +38,10 @@ namespace CGCWRegistration
 
             builder.RegisterType<LanguageRepository>().As<ILanguageRepository>();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>();
-            builder.RegisterType<ResponseOptionRepository>().As<ResponseOptionRepository>();
+            builder.RegisterType<AgeRangeRepository>().As<IAgeRangeRepository>();
+            builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<ResponseOptionRepository>().As<IResponseOptionRepository>();
+            builder.RegisterType<RegistrationService>().As<IRegistrationService>();
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }

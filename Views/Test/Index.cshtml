@@ -1,0 +1,43 @@
+@using CGCWRegistration.Models;
+
+@model CGCWRegistration.Models.ViewModels.TestViewModel
+
+<h2>Languages</h2>
+
+<ul>
+    @foreach (var language in Model.Languages)
+    {
+        <li>@language.LanguageName</li>
+    }
+</ul>
+
+<h2>Age Ranges</h2>
+<ul>
+    @foreach (var ageRange in Model.AgeRanges)
+    {
+        <li>@ageRange.Range</li>
+    }
+</ul>
+
+@foreach (var question in Model.Questions)
+{
+    <div>
+        <h3>@question.QuestionText</h3>
+        <ul>
+            @foreach (var option in question.ResponseOptions)
+            {
+                <li>@option.ResponseOptionText</li>
+            }
+        </ul>
+    </div>
+}
+
+<h2>Users</h2>
+<ul>
+    @foreach (var user in Model.Users)
+    {
+        <li>@user.FirstName</li>
+        <li>@user.LastName</li>
+        <li>@user.AgeRange.Range</li>
+    }
+</ul>
