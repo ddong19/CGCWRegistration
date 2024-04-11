@@ -1,4 +1,5 @@
 ﻿using CGCWRegistration.Models;
+using CGCWRegistration.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace CGCWRegistration.BLL
 {
     public interface IRegistrationService
     {
-        Task<IEnumerable<AgeRange>> GetAllAgeRangesAsync();
-        Task RegisterUserAsync(User user);
+        Task<IEnumerable<AgeRange>> GetRangesAsync();
+        Task<UserRegistrationViewModel> PrepareRegistrationViewModelAsync();
+        Task RegisterUserAsync(UserRegistrationViewModel model);
     }
 }

@@ -20,53 +20,28 @@ namespace CGCWRegistration.Controllers
             _registrationService = registrationService;
         }
 
+        // GET
         [HttpGet]
         public async Task<ActionResult> Register()
         {
-            var viewModel = new UserRegistrationViewModel
-            {
-                AgeRanges = await _registrationService.GetAllAgeRangesAsync()
-            };
-
+            var viewModel = await _registrationService.PrepareRegistrationViewModelAsync();
             return View(viewModel);
-
         }
+
+        // POST
         [HttpPost]
         public async Task<ActionResult> Register(UserRegistrationViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                // Reload AgeRanges if re-displaying the form
-                model.AgeRanges = await _registrationService.GetAllAgeRangesAsync();
-                return View(model);
+                return View(await _registrationService.PrepareRegistrationViewModelAsync());
             }
-
-            var user = new User
-            {
-                // Assign properties from model to user
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                ChineseName = model.ChineseName,
-                Sex = model.Sex,
-                Occupation = model.Occupation,
-                AgeRangeID = model.AgeRangeID,
-                PhoneNumber = model.PhoneNumber,
-                Email = model.Email,
-                Address = model.Address,
-                IntroducedBy = model.IntroducedBy,
-                ExistingMember = model.ExistingMember,
-                RegistrationDate = DateTime.Now,
-            };
-
-            // call to RegisterUserAsync in RegistrationService
-            await _registrationService.RegisterUserAsync(user);
-            
+            // Register user to database
+            await _registrationService.RegisterUserAsync(model);
+            // Clear ModelState to remove old input data
             ModelState.Clear();
-            var newViewModel = new UserRegistrationViewModel
-            {
-                AgeRanges = await _registrationService.GetAllAgeRangesAsync()
-            };
-
+            // Prepare a fresh ViewModel
+            var newViewModel = await _registrationService.PrepareRegistrationViewModelAsync();
             return View("Register", newViewModel);
         }
     }
