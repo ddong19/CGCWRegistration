@@ -29,13 +29,11 @@ namespace CGCWRegistration
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
             var builder = new ContainerBuilder();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterType<RegistrationContext>()
                    .WithParameter("connectionString", ConfigurationManager.ConnectionStrings["RegistrationContext"].ConnectionString)
                    .InstancePerRequest();
-
             builder.RegisterType<LanguageRepository>().As<ILanguageRepository>();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>();
             builder.RegisterType<AgeRangeRepository>().As<IAgeRangeRepository>();

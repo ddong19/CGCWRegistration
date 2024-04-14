@@ -11,7 +11,7 @@ namespace CGCWRegistration.DAL
 {
     public class RegistrationContext : DbContext
     {
-        public RegistrationContext(): base(GetConnectionString()) { }
+        public RegistrationContext(): base("name=RegistrationContext") { }
 
         private static string GetConnectionString()
         {
