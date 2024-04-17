@@ -5,53 +5,75 @@
 {
     @Html.AntiForgeryToken()
 
-    <fieldset>
-        <legend>Registration Form</legend>
+<fieldset>
+    <legend>Registration Form</legend>
 
-        @Html.LabelFor(m => m.FirstName)
-        @Html.TextBoxFor(m => m.FirstName)
-        @Html.ValidationMessageFor(m => m.FirstName)
+    @Html.LabelFor(m => m.FirstName)
+    @Html.TextBoxFor(m => m.FirstName)
+    @Html.ValidationMessageFor(m => m.FirstName)
 
-        @Html.LabelFor(m => m.LastName)
-        @Html.TextBoxFor(m => m.LastName)
-        @Html.ValidationMessageFor(m => m.LastName)
+    @Html.LabelFor(m => m.LastName)
+    @Html.TextBoxFor(m => m.LastName)
+    @Html.ValidationMessageFor(m => m.LastName)
 
-        @Html.LabelFor(m => m.ChineseName)
-        @Html.TextBoxFor(m => m.ChineseName)
-        @Html.ValidationMessageFor(m => m.ChineseName)
+    @Html.LabelFor(m => m.ChineseName)
+    @Html.TextBoxFor(m => m.ChineseName)
+    @Html.ValidationMessageFor(m => m.ChineseName)
 
-        @Html.LabelFor(m => m.Sex)
-        @Html.DropDownListFor(m => m.Sex, new SelectList(new List<string> { "Male", "Female", "Other" }), "Select Gender")
-        @Html.ValidationMessageFor(m => m.Sex)
+    @Html.LabelFor(m => m.Sex)
+    @Html.DropDownListFor(m => m.Sex, new SelectList(new List<string> { "Male", "Female", "Other" }), "Select Gender")
+    @Html.ValidationMessageFor(m => m.Sex)
 
-        @Html.LabelFor(m => m.Occupation)
-        @Html.TextBoxFor(m => m.Occupation)
-        @Html.ValidationMessageFor(m => m.Occupation)
+    @Html.LabelFor(m => m.Occupation)
+    @Html.TextBoxFor(m => m.Occupation)
+    @Html.ValidationMessageFor(m => m.Occupation)
 
-        @Html.LabelFor(m => m.AgeRangeID)
-        @Html.DropDownListFor(m => m.AgeRangeID, new SelectList(Model.AgeRanges, "AgeRangeID", "Range"), "Select Age Range")
-        @Html.ValidationMessageFor(m => m.AgeRangeID)
+    @Html.LabelFor(m => m.AgeRangeID)
+    @Html.DropDownListFor(m => m.AgeRangeID, new SelectList(Model.AgeRanges, "AgeRangeID", "Range"), "Select Age Range")
+    @Html.ValidationMessageFor(m => m.AgeRangeID)
 
-        @Html.LabelFor(m => m.PhoneNumber)
-        @Html.TextBoxFor(m => m.PhoneNumber)
-        @Html.ValidationMessageFor(m => m.PhoneNumber)
+    @Html.LabelFor(m => m.PhoneNumber)
+    @Html.TextBoxFor(m => m.PhoneNumber)
+    @Html.ValidationMessageFor(m => m.PhoneNumber)
 
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBoxFor(m => m.Email)
-        @Html.ValidationMessageFor(m => m.Email)
+    @Html.LabelFor(m => m.Email)
+    @Html.TextBoxFor(m => m.Email)
+    @Html.ValidationMessageFor(m => m.Email)
 
-        @Html.LabelFor(m => m.Address)
-        @Html.TextBoxFor(m => m.Address)
-        @Html.ValidationMessageFor(m => m.Address)
+    @Html.LabelFor(m => m.Address)
+    @Html.TextBoxFor(m => m.Address)
+    @Html.ValidationMessageFor(m => m.Address)
 
-        @Html.LabelFor(m => m.IntroducedBy)
-        @Html.TextBoxFor(m => m.IntroducedBy)
-        @Html.ValidationMessageFor(m => m.IntroducedBy)
+    @Html.LabelFor(m => m.IntroducedBy)
+    @Html.TextBoxFor(m => m.IntroducedBy)
+    @Html.ValidationMessageFor(m => m.IntroducedBy)
 
-        @Html.LabelFor(m => m.ExistingMember)
-        @Html.DropDownListFor(m => m.ExistingMember, new SelectList(new List<string> { "Yes", "No" }), "Are you an existing member?")
-        @Html.ValidationMessageFor(m => m.ExistingMember)
+    @Html.LabelFor(m => m.ExistingMember)
+    @Html.DropDownListFor(m => m.ExistingMember, new SelectList(new List<string> { "Yes", "No" }), "Are you an existing member?")
+    @Html.ValidationMessageFor(m => m.ExistingMember)
 
-        <input type="submit" value="Register" />
-    </fieldset>
+    <h2>Select Languages:</h2>
+    @foreach (var language in Model.Languages)
+    {
+        <div>
+            <input type="checkbox" name="SelectedLanguageIds" value="@language.Id" /> @language.Name
+        </div>
+    }
+
+    <h2>Questions:</h2>
+    @foreach (var question in Model.Questions)
+    {
+        <div>
+            <h4>@question.Text</h4>
+            @foreach (var option in question.ResponseOptions)
+            {
+                <div>
+                    <input type="radio" name="Responses[@question.QuestionId]" value="@option.Id" /> @option.Text
+                </div>
+            }
+        </div>
+    }
+
+    <input type="submit" value="Register" />
+</fieldset>
 }

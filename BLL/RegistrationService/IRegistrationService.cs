@@ -10,7 +10,6 @@ namespace CGCWRegistration.BLL
 {
     public interface IRegistrationService
     {
-        Task<IEnumerable<AgeRange>> GetRangesAsync();
         Task<UserRegistrationViewModel> PrepareRegistrationViewModelAsync();
         Task RegisterUserAsync(UserRegistrationViewModel model);
     }

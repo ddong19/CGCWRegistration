@@ -155,8 +155,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="BLL\IRegistrationService.cs" />
-    <Compile Include="BLL\RegistrationService.cs" />
+    <Compile Include="BLL\RegistrationService\IRegistrationService.cs" />
+    <Compile Include="BLL\RegistrationService\RegistrationService.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -171,8 +171,12 @@
     <Compile Include="DAL\RegistrationInitializer.cs" />
     <Compile Include="DAL\ResponseOptionRepository\IResponseOptionRepository.cs" />
     <Compile Include="DAL\ResponseOptionRepository\ResponseOptionRepository.cs" />
+    <Compile Include="DAL\UserLanguageRepository\IUserLanguageRepository.cs" />
+    <Compile Include="DAL\UserLanguageRepository\UserLanguageRepository.cs" />
     <Compile Include="DAL\UserRepository\IUserRepository.cs" />
     <Compile Include="DAL\UserRepository\UserRepository.cs" />
+    <Compile Include="DAL\UserResponseRepository\IUserResponseRepository.cs" />
+    <Compile Include="DAL\UserResponseRepository\UserResponseRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
