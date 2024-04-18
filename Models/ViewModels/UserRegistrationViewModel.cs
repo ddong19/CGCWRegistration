@@ -27,14 +27,15 @@ namespace CGCWRegistration.Models.ViewModels
         public List<int> SelectedLanguageIds { get; set; } // IDs of selected languages
 
         public List<QuestionViewModel> Questions { get; set; }
-        public Dictionary<int, int> Responses { get; set; } // Key: QuestionId, Value: SelectedResponseOptionId
+/*        public Dictionary<int, int> Responses { get; set; } // Key: QuestionId, Value: SelectedResponseOptionId
+*/        public List<QuestionResponse> Responses { get; set; }
 
         public UserRegistrationViewModel()
         {
             Languages = new List<LanguageViewModel>();
             SelectedLanguageIds = new List<int>();
             Questions = new List<QuestionViewModel>();
-            Responses = new Dictionary<int, int>();
+            Responses = new List<QuestionResponse>();
         }
     }
     public class LanguageViewModel
@@ -60,4 +61,11 @@ namespace CGCWRegistration.Models.ViewModels
         public int Id { get; set; }
         public string Text { get; set; }
     }
+
+    public class QuestionResponse
+    {
+        public int QuestionId { get; set; }
+        public int ResponseId { get; set; }
+    }
+
 }

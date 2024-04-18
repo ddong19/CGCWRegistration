@@ -79,8 +79,8 @@ namespace CGCWRegistration.BLL
                 await _userresponseRepository.AddUserResponseAsync(new UserResponse 
                 { 
                     UserID = user.UserID,
-                    QuestionID = response.Key,
-                    ResponseOptionID = response.Value
+                    QuestionID = response.QuestionId,
+                    ResponseOptionID = response.ResponseId
                 });
             }
         }
