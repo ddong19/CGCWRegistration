@@ -5,72 +5,75 @@
 {
     @Html.AntiForgeryToken()
 
-    <fieldset id="registrationForm">
-        <legend>Registration Form</legend>
+<fieldset id="registrationForm">
+    <legend>Registration Form</legend>
 
-        <label>First Name:</label>
-        <input type="text" v-model="user.firstName" />
+    <label>First Name:</label>
+    <input type="text" v-model="user.firstName" />
 
-        <label>Last Name:</label>
-        <input type="text" v-model="user.lastName" />
+    <label>Last Name:</label>
+    <input type="text" v-model="user.lastName" />
 
-        <label>Chinese Name:</label>
-        <input type="text" v-model="user.chineseName" />
+    <label>Chinese Name:</label>
+    <input type="text" v-model="user.chineseName" />
 
-        <label>Sex:</label>
-        <select v-model="user.sex">
-            <option disabled value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-        </select>
+    <label>Sex:</label>
+    <select v-model="user.sex">
+        <option disabled value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
 
-        <label>Occupation:</label>
-        <input type="text" v-model="user.occupation" />
+    <label>Occupation:</label>
+    <input type="text" v-model="user.occupation" />
 
-        <label>Age Range:</label>
-        <select v-model="user.ageRangeID">
-            <option disabled value="">Select Age Range</option>
-            <option v-for="range in ageRanges" :value="range.Id">
-                {{ range.Range }}
-            </option>
-        </select>
+    <label>Age Range:</label>
+    <select v-model="user.ageRangeID">
+        <option disabled value="">Select Age Range</option>
+        <option v-for="range in ageRanges" :value="range.Id">
+            {{ range.Range }}
+        </option>
+    </select>
 
-        <label>Phone Number</label>
-        <input type="text" v-model="user.phoneNumber" />
+    <label>Phone Number</label>
+    <input type="text" v-model="user.phoneNumber" />
 
-        <label>Email:</label>
-        <input type="text" v-model="user.email" />
+    <label>Email:</label>
+    <input type="text" v-model="user.email" />
 
-        <label>Address:</label>
-        <input type="text" v-model="user.address" />
+    <label>Address:</label>
+    <input type="text" v-model="user.address" />
 
-        <label>Introduced By:</label>
-        <input type="text" v-model="user.introducedBy" />
+    <label>Introduced By:</label>
+    <input type="text" v-model="user.introducedBy" />
 
-        <label>Existing Member?:</label>
-        <select v-model="user.existingMember">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
+    <label>Existing Member?:</label>
+    <select v-model="user.existingMember">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
 
-        <h2>Select Languages:</h2>
-        <div v-for="language in languages">
-            <input type="checkbox" :value="language.Id" v-model="user.selectedLanguageIds">
-            {{ language.Name }}
+    <h2>Select Languages:</h2>
+    <div v-for="language in languages">
+        <input type="checkbox" :value="language.Id" v-model="user.selectedLanguageIds">
+        {{ language.Name }}
+    </div>
+
+    <h2>Questions:</h2>
+    <div v-for="(question, qIndex) in questions" :key="question.QuestionId">
+        <h4>{{ question.Question }}</h4>
+        <div v-for="option in question.ResponseOptions" :key="option.Id">
+            <!-- Bind radio button directly to the ResponseId for correct response mapping -->
+            <input type="radio" v-model="user.responses[qIndex].ResponseId" :value="option.Id">
+            {{ option.Response }}
         </div>
+    </div>
 
-        <h2>Questions:</h2>
-        <div v-for="(question, index) in questions" :key="question.Id">
-            <h4>{{ question.Question }}</h4>
-            <div v-for="option in question.ResponseOptions">
-                <input type="radio" :name="'Responses['+index+'].ResponseId'" :value="option.Id">
-                {{ option.Response }}
-            </div>
-        </div>
 
-        <input type="button" value="Register" @@click="submitForm" />
-    </fieldset>
+
+    <input type="button" value="Register" @@click="submitForm" />
+</fieldset>
 
 }
 
@@ -128,14 +131,55 @@
                 axios.get('/questions')
                     .then(response => {
                         this.questions = response.data;
+                        this.initializeResponses();
                     })
                     .catch(error => {
                         console.error('Error fetching questions:', error);
                     });
             },
+            initializeResponses() {
+                this.user.responses = this.questions.map(question => ({
+                    QuestionId: question.Id,
+                    ResponseId: null
+                }));
+            },
             submitForm() {
-                // AJAX post logic here using axios or vanilla JS
+                axios.post('/Register', this.user)
+                    .then(response => {
+                        if (response.data.success) {
+                            // Handle success
+                            console.log(response.data.message);
+                            // Reset form or redirect, or update UI to reflect success
+                            this.resetForm();
+                        } else {
+                            // Handle failure
+                            console.log(response.data.message);
+                            // Show error messages from response.data.errors if available
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Submission error:', error);
+                        // Handle HTTP error
+                    });
+            },
+            resetForm() {
+                this.user = {
+                    firstName: '',
+                    lastName: '',
+                    chineseName: '',
+                    sex: '',
+                    occupation: '',
+                    ageRangeID: '',
+                    phoneNumber: '',
+                    email: '',
+                    address: '',
+                    introducedBy: '',
+                    existingMember: '',
+                    selectedLanguageIds: [],
+                    responses: []
+                };
             }
+
         }
     });
 </script>
