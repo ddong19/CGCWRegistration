@@ -1,4 +1,5 @@
 ﻿using CGCWRegistration.Models;
+using CGCWRegistration.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,11 +18,20 @@ namespace CGCWRegistration.DAL.QuestionRepository
             _context = context;
         }
 
-        public async Task<IEnumerable<Question>> GetAllQuestionsAsync()
+        public async Task<IEnumerable<QuestionDTO>> GetAllQuestionsAsync()
         {
             return await _context.Questions
-                                 .Include(q => q.ResponseOptions) // Assuming you want to include ResponseOptions
-                                 .ToListAsync();
+                                 .Include(q => q.ResponseOptions)
+                                 .Select(q => new QuestionDTO
+                                 {
+                                     Id = q.QuestionID,
+                                     Question = q.QuestionText,
+                                     ResponseOptions = q.ResponseOptions.Select(ro => new ResponseOptionDTO
+                                     {
+                                         Id = ro.ResponseOptionID,
+                                         Response = ro.ResponseOptionText
+                                     }).ToList()
+                                 }).ToListAsync();
         }
 
         public async Task<Question> GetQuestionByIdAsync(int questionId)

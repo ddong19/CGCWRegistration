@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CGCWRegistration.Models;
+using CGCWRegistration.Models.DTOs;
 
 
 namespace CGCWRegistration.DAL.LanguageRepository
 {
     public interface ILanguageRepository
     {
-        Task<IEnumerable<Language>> GetAllLanguagesAsync();
+        Task<IEnumerable<LanguageDTO>> GetAllLanguagesAsync();
     }
 }

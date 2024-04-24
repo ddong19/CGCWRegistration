@@ -1,4 +1,5 @@
 ﻿using CGCWRegistration.Models;
+using CGCWRegistration.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -15,9 +16,17 @@ namespace CGCWRegistration.DAL.AgeRangeRepository
         {
             _context = context;
         }
-        public async Task<IEnumerable<AgeRange>> GetAllAgeRangesAsync()
+        public async Task<IEnumerable<AgeRangeDTO>> GetAllAgeRangesAsync()
         {
-            return await _context.AgeRanges.ToListAsync();
+            // Fetch the AgeRanges and project them to AgeRangeDTO
+            var ageRanges = await _context.AgeRanges
+                .Select(ar => new AgeRangeDTO
+                {
+                    Id = ar.AgeRangeID,
+                    Range = ar.Range
+                }).ToListAsync();
+
+            return ageRanges;
         }
     }
 }

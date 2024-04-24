@@ -5,78 +5,139 @@
 {
     @Html.AntiForgeryToken()
 
-<fieldset>
-    <legend>Registration Form</legend>
+    <fieldset id="registrationForm">
+        <legend>Registration Form</legend>
 
-    @Html.LabelFor(m => m.FirstName)
-    @Html.TextBoxFor(m => m.FirstName)
-    @Html.ValidationMessageFor(m => m.FirstName)
+        <label>First Name:</label>
+        <input type="text" v-model="user.firstName" />
 
-    @Html.LabelFor(m => m.LastName)
-    @Html.TextBoxFor(m => m.LastName)
-    @Html.ValidationMessageFor(m => m.LastName)
+        <label>Last Name:</label>
+        <input type="text" v-model="user.lastName" />
 
-    @Html.LabelFor(m => m.ChineseName)
-    @Html.TextBoxFor(m => m.ChineseName)
-    @Html.ValidationMessageFor(m => m.ChineseName)
+        <label>Chinese Name:</label>
+        <input type="text" v-model="user.chineseName" />
 
-    @Html.LabelFor(m => m.Sex)
-    @Html.DropDownListFor(m => m.Sex, new SelectList(new List<string> { "Male", "Female", "Other" }), "Select Gender")
-    @Html.ValidationMessageFor(m => m.Sex)
+        <label>Sex:</label>
+        <select v-model="user.sex">
+            <option disabled value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
 
-    @Html.LabelFor(m => m.Occupation)
-    @Html.TextBoxFor(m => m.Occupation)
-    @Html.ValidationMessageFor(m => m.Occupation)
+        <label>Occupation:</label>
+        <input type="text" v-model="user.occupation" />
 
-    @Html.LabelFor(m => m.AgeRangeID)
-    @Html.DropDownListFor(m => m.AgeRangeID, new SelectList(Model.AgeRanges, "AgeRangeID", "Range"), "Select Age Range")
-    @Html.ValidationMessageFor(m => m.AgeRangeID)
+        <label>Age Range:</label>
+        <select v-model="user.ageRangeID">
+            <option disabled value="">Select Age Range</option>
+            <option v-for="range in ageRanges" :value="range.Id">
+                {{ range.Range }}
+            </option>
+        </select>
 
-    @Html.LabelFor(m => m.PhoneNumber)
-    @Html.TextBoxFor(m => m.PhoneNumber)
-    @Html.ValidationMessageFor(m => m.PhoneNumber)
+        <label>Phone Number</label>
+        <input type="text" v-model="user.phoneNumber" />
 
-    @Html.LabelFor(m => m.Email)
-    @Html.TextBoxFor(m => m.Email)
-    @Html.ValidationMessageFor(m => m.Email)
+        <label>Email:</label>
+        <input type="text" v-model="user.email" />
 
-    @Html.LabelFor(m => m.Address)
-    @Html.TextBoxFor(m => m.Address)
-    @Html.ValidationMessageFor(m => m.Address)
+        <label>Address:</label>
+        <input type="text" v-model="user.address" />
 
-    @Html.LabelFor(m => m.IntroducedBy)
-    @Html.TextBoxFor(m => m.IntroducedBy)
-    @Html.ValidationMessageFor(m => m.IntroducedBy)
+        <label>Introduced By:</label>
+        <input type="text" v-model="user.introducedBy" />
 
-    @Html.LabelFor(m => m.ExistingMember)
-    @Html.DropDownListFor(m => m.ExistingMember, new SelectList(new List<string> { "Yes", "No" }), "Are you an existing member?")
-    @Html.ValidationMessageFor(m => m.ExistingMember)
+        <label>Existing Member?:</label>
+        <select v-model="user.existingMember">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
 
-    <h2>Select Languages:</h2>
-    @foreach (var language in Model.Languages)
-    {
-        <div>
-            <input type="checkbox" name="SelectedLanguageIds" value="@language.Id" /> @language.Name
+        <h2>Select Languages:</h2>
+        <div v-for="language in languages">
+            <input type="checkbox" :value="language.Id" v-model="user.selectedLanguageIds">
+            {{ language.Name }}
         </div>
-    }
 
-    <h2>Questions:</h2>
-    @for (int i = 0; i < Model.Questions.Count; i++)
-    {
-        <div>
-            <h4>@Model.Questions[i].Text</h4>
-            @foreach (var option in Model.Questions[i].ResponseOptions)
-            {
-                <div>
-                    <input type="radio" name="Responses[@i].ResponseId" value="@option.Id" />
-                    <input type="hidden" name="Responses[@i].QuestionId" value="@Model.Questions[i].QuestionId" />
-                    @option.Text
-                </div>
-            }
+        <h2>Questions:</h2>
+        <div v-for="(question, index) in questions" :key="question.Id">
+            <h4>{{ question.Question }}</h4>
+            <div v-for="option in question.ResponseOptions">
+                <input type="radio" :name="'Responses['+index+'].ResponseId'" :value="option.Id">
+                {{ option.Response }}
+            </div>
         </div>
-    }
 
+        <input type="button" value="Register" @@click="submitForm" />
+    </fieldset>
 
-    <input type="submit" value="Register" />
-</fieldset>
 }
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#registrationForm',
+        data: {
+            user: {
+                firstName: '',
+                lastName: '',
+                chineseName: '',
+                sex: '',
+                occupation: '',
+                ageRangeID: '',
+                phoneNumber: '',
+                email: '',
+                address: '',
+                introducedBy: '',
+                existingMember: '',
+                selectedLanguageIds: [],
+                responses: []
+            },
+            ageRanges: [],
+            languages: [],
+            questions: []
+        },
+        mounted() {
+            this.fetchAgeRanges();
+            this.fetchLanguages();
+            this.fetchQuestions();
+        },
+        methods: {
+            fetchAgeRanges() {
+                axios.get('/ageranges')
+                    .then(response => {
+                        this.ageRanges = response.data;
+                        console.log(this.ageRanges)
+                    })
+                    .catch(error => {
+                        console.error('Error fetching age ranges:', error);
+                    });
+            },
+            fetchLanguages() {
+                axios.get('/languages')
+                    .then(response => {
+                        this.languages = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching languages:', error);
+                    });
+            },
+            fetchQuestions() {
+                axios.get('/questions')
+                    .then(response => {
+                        this.questions = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching questions:', error);
+                    });
+            },
+            submitForm() {
+                // AJAX post logic here using axios or vanilla JS
+            }
+        }
+    });
+</script>
+
+

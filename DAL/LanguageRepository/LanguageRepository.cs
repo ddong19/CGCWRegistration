@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Entity; // For EF 6 to support async operations
 using System.Web;
+using CGCWRegistration.Models.DTOs;
 
 namespace CGCWRegistration.DAL.LanguageRepository
 {
@@ -15,9 +16,15 @@ namespace CGCWRegistration.DAL.LanguageRepository
         {
             _context = context;
         }
-        public async Task<IEnumerable<Language>> GetAllLanguagesAsync()
+        public async Task<IEnumerable<LanguageDTO>> GetAllLanguagesAsync()
         {
-            return await _context.Languages.ToListAsync();
+            var languages = await _context.Languages
+                .Select(l => new LanguageDTO
+                {
+                    Id = l.LanguageID,
+                    Name = l.LanguageName
+                }).ToListAsync();
+            return languages;
         }
     }
 }

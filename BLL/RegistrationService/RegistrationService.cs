@@ -44,8 +44,8 @@ namespace CGCWRegistration.BLL
             var viewModel = new UserRegistrationViewModel
             {
                 AgeRanges = ageRanges,
-                Languages = languages.Select(lang => new LanguageViewModel { Id = lang.LanguageID, Name = lang.LanguageName }).ToList(),
-                Questions = questions.Select(q => new QuestionViewModel { QuestionId = q.QuestionID, Text = q.QuestionText, ResponseOptions = q.ResponseOptions.Select(ro => new ResponseOptionViewModel { Id = ro.ResponseOptionID, Text = ro.ResponseOptionText }).ToList() }).ToList(),
+                Languages = languages.Select(lang => new LanguageViewModel { Id = lang.Id, Name = lang.Name }).ToList(),
+                Questions = questions.Select(q => new QuestionViewModel { QuestionId = q.Id, Text = q.Question, ResponseOptions = q.ResponseOptions.Select(ro => new ResponseOptionViewModel { Id = ro.Id, Text = ro.Response }).ToList() }).ToList(),
             };
             return viewModel;
         }

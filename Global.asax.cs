@@ -20,6 +20,7 @@ using CGCWRegistration.DAL.UserRepository;
 using CGCWRegistration.BLL;
 using CGCWRegistration.DAL.UserLanguageRepository;
 using CGCWRegistration.DAL.UserResponseRepository;
+using Newtonsoft.Json;
 
 namespace CGCWRegistration
 {
