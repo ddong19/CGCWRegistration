@@ -64,13 +64,10 @@
     <div v-for="(question, qIndex) in questions" :key="question.QuestionId">
         <h4>{{ question.Question }}</h4>
         <div v-for="option in question.ResponseOptions" :key="option.Id">
-            <!-- Bind radio button directly to the ResponseId for correct response mapping -->
             <input type="radio" v-model="user.responses[qIndex].ResponseId" :value="option.Id">
             {{ option.Response }}
         </div>
     </div>
-
-
 
     <input type="button" value="Register" @@click="submitForm" />
 </fieldset>
@@ -103,6 +100,7 @@
             questions: []
         },
         mounted() {
+            console.log("Component Mounted")
             this.fetchAgeRanges();
             this.fetchLanguages();
             this.fetchQuestions();
@@ -112,7 +110,6 @@
                 axios.get('/ageranges')
                     .then(response => {
                         this.ageRanges = response.data;
-                        console.log(this.ageRanges)
                     })
                     .catch(error => {
                         console.error('Error fetching age ranges:', error);
@@ -144,25 +141,23 @@
                 }));
             },
             submitForm() {
+                console.log("Submitting")
                 axios.post('/Register', this.user)
                     .then(response => {
                         if (response.data.success) {
-                            // Handle success
                             console.log(response.data.message);
-                            // Reset form or redirect, or update UI to reflect success
                             this.resetForm();
                         } else {
-                            // Handle failure
+                            console.lg
                             console.log(response.data.message);
-                            // Show error messages from response.data.errors if available
                         }
                     })
                     .catch(error => {
                         console.error('Submission error:', error);
-                        // Handle HTTP error
                     });
             },
             resetForm() {
+                console.log("Resetting form");
                 this.user = {
                     firstName: '',
                     lastName: '',
@@ -176,10 +171,12 @@
                     introducedBy: '',
                     existingMember: '',
                     selectedLanguageIds: [],
-                    responses: []
+                    responses: this.user.responses.map(response => ({
+                        QuestionId: response.QuestionId,
+                        ResponseId: null
+                    }))
                 };
             }
-
         }
     });
 </script>
