@@ -37,7 +37,10 @@
                                 </b-form-group>
 
                                 <b-form-group label="Sex:" label-for="select-sex">
-                                    <b-form-select id="select-sex" v-model="user.sex" :options="{ '': 'Select Gender', 'Male': 'Male', 'Female': 'Female', 'Other': 'Other' }" required></b-form-select>
+                                    <b-form-radio-group id="select-sex"
+                                                        v-model="user.sex"
+                                                        :options="['Male', 'Female']" required>
+                                    </b-form-radio-group>
                                 </b-form-group>
 
                                 <b-form-group label="Occupation:" label-for="input-occupation">
@@ -45,7 +48,7 @@
                                 </b-form-group>
 
                                 <b-form-group label="Age Range:" label-for="select-ageRange">
-                                    <b-form-select id="select-ageRange" v-model="user.ageRangeID" :options="ageRanges.map(a => ({ value: a.Id, text: a.Range }))" placeholder="Select Age Range" required></b-form-select>
+                                    <b-form-radio-group id="select-ageRange" v-model="user.ageRangeID" :options="ageRanges.map(a => ({ value: a.Id, text: a.Range }))" required></b-form-radio-group>
                                 </b-form-group>
 
                                 <b-form-group label="Phone Number:" label-for="input-phone">
@@ -65,7 +68,9 @@
                                 </b-form-group>
 
                                 <b-form-group label="Existing Member?">
-                                    <b-form-select v-model="user.existingMember" :options="['Yes', 'No']" required></b-form-select>
+                                    <b-form-radio-group v-model="user.existingMember"
+                                                        :options="['Yes', 'No']" required>
+                                    </b-form-radio-group>
                                 </b-form-group>
 
                                 <b-form-group label="Select Languages:">

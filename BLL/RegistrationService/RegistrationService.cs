@@ -21,19 +21,14 @@ namespace CGCWRegistration.BLL
         private readonly IAgeRangeRepository _ageRangeRepository;
         private readonly ILanguageRepository _languageRepository;
         private readonly IQuestionRepository _questionRepository;
-        private readonly IUserLanguageRepository _userlanguageRepository;
-        private readonly IUserResponseRepository _userresponseRepository;
 
         public RegistrationService(IUserRepository userRepository, IAgeRangeRepository ageRangeRepository,
-                                   ILanguageRepository languageRepository, IQuestionRepository questionRepository,
-                                   IUserLanguageRepository userLanguageRepository, IUserResponseRepository userResponseRepository)
+                                   ILanguageRepository languageRepository, IQuestionRepository questionRepository)
         {
             _userRepository = userRepository;
             _ageRangeRepository = ageRangeRepository;
             _languageRepository = languageRepository;
             _questionRepository = questionRepository;
-            _userlanguageRepository = userLanguageRepository;
-            _userresponseRepository = userResponseRepository;
         }
 
         public async Task<UserRegistrationViewModel> PrepareRegistrationViewModelAsync()

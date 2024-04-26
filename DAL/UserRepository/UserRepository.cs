@@ -29,7 +29,7 @@ namespace CGCWRegistration.DAL.UserRepository
             {
                 throw new ArgumentNullException(nameof(userDTO));
             }
-            // all or nothing
+            // all or nothing Entity Framework transaction
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
