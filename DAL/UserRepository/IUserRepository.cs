@@ -1,4 +1,5 @@
 ﻿using CGCWRegistration.Models;
+using CGCWRegistration.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace CGCWRegistration.DAL.UserRepository
     public interface IUserRepository
     {
         Task<IEnumerable<User>> GetAllAgeUsersAsync();
-        Task AddUserAsync(User user);
+        Task AddUserAsync(UserDTO user);
     }
 }

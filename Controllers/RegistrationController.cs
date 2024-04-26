@@ -22,6 +22,7 @@ namespace CGCWRegistration.Controllers
 
         // GET
         [HttpGet]
+        [Route("register")]
         public async Task<ActionResult> Register()
         {
             var viewModel = await _registrationService.PrepareRegistrationViewModelAsync();
@@ -30,6 +31,7 @@ namespace CGCWRegistration.Controllers
 
         // POST
         [HttpPost]
+        [Route("register")]
         public async Task<ActionResult> Register(UserRegistrationViewModel model)
         {
             if (!ModelState.IsValid)

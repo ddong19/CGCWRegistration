@@ -6,6 +6,7 @@ using CGCWRegistration.DAL.UserLanguageRepository;
 using CGCWRegistration.DAL.UserResponseRepository;
 using CGCWRegistration.Models;
 using CGCWRegistration.Models.ViewModels;
+using CGCWRegistration.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,8 @@ namespace CGCWRegistration.BLL
 
         public async Task RegisterUserAsync(UserRegistrationViewModel model)
         {
-            var user = new User
+            // business object verification (error in form will return error to frontend)
+            var userDTO = new UserDTO // use a user DTO
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -66,23 +68,18 @@ namespace CGCWRegistration.BLL
                 IntroducedBy = model.IntroducedBy,
                 ExistingMember = model.ExistingMember,
                 RegistrationDate = DateTime.Now,
+                SelectedLanguageIds = model.SelectedLanguageIds,
+                Responses = model.Responses.Select(r => new QuestionResponse
+                {
+                    QuestionId = r.QuestionId,
+                    ResponseId = r.ResponseId
+                }).ToList()
             };
 
-            await _userRepository.AddUserAsync(user);
-
-            foreach (var languageID in model.SelectedLanguageIds)
-            {
-                await _userlanguageRepository.AddUserLanguageAsync(new UserLanguage { UserID = user.UserID, LanguageID = languageID });
-            }
-            foreach (var response in model.Responses)
-            {
-                await _userresponseRepository.AddUserResponseAsync(new UserResponse 
-                { 
-                    UserID = user.UserID,
-                    QuestionID = response.QuestionId,
-                    ResponseOptionID = response.ResponseId
-                });
-            }
+            // Save language and responses within the database acccess, with the user (all or nothing)
+            await _userRepository.AddUserAsync(userDTO);
         }
+
+        // user data in Vue.js --> bind to UserRegistrationViewModel --> RegistrationController --> RegistrationService (BLL) --> RegistrationRepository (DAL) (saves to DB)
     }
 }

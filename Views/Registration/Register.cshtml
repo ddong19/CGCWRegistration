@@ -1,169 +1,109 @@
 @model CGCWRegistration.Models.ViewModels.UserRegistrationViewModel
 
-
-@using (Html.BeginForm("Register", "Registration", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue/dist/bootstrap-vue.css" />
-
-    <fieldset id="registrationForm">
-        <legend>Registration Form</legend>
-
-        <b-form-group label="First Name:">
-            <b-form-input v-model="user.firstName" placeholder="Enter first name"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Last Name:">
-            <b-form-input v-model="user.lastName" placeholder="Enter last name"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Chinese Name:">
-            <b-form-input v-model="user.chineseName" placeholder="Enter Chinese name"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Sex:">
-            <b-form-select v-model="user.sex" :options="{ 'Male': 'Male', 'Female': 'Female', 'Other': 'Other' }" placeholder="Select Gender"></b-form-select>
-        </b-form-group>
-
-        <b-form-group label="Occupation:">
-            <b-form-input v-model="user.occupation" placeholder="Enter occupation"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Age Range:">
-            <b-form-select v-model="user.ageRangeID" :options="ageRanges.map(a => ({ value: a.Id, text: a.Range }))" placeholder="Select Age Range"></b-form-select>
-        </b-form-group>
-
-        <b-form-group label="Phone Number:">
-            <b-form-input v-model="user.phoneNumber" placeholder="Enter phone number"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Email:">
-            <b-form-input v-model="user.email" placeholder="Enter email"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Address:">
-            <b-form-input v-model="user.address" placeholder="Enter address"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Introduced by:">
-            <b-form-input v-model="user.introducedBy" placeholder="Introduced by"></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Existing Member?">
-            <b-form-select v-model="user.existingMember" :options="['Yes', 'No']" placeholder="Choose one"></b-form-select>
-        </b-form-group>
-
-        <b-form-group label="Select Languages:">
-            <b-form-checkbox-group v-model="user.selectedLanguageIds" :options="languages.map(lang => ({ value: lang.Id, text: lang.Name }))">
-            </b-form-checkbox-group>
-        </b-form-group>
-
-        <div v-for="(question, qIndex) in questions" :key="question.QuestionId">
-            <b-card>
-                <template v-slot:header>
-                    <h4>{{ question.Question }}</h4>
-                </template>
-                <b-form-radio-group v-model="user.responses[qIndex].ResponseId"
-                                    :options="question.ResponseOptions.map(option => ({ value: option.Id, text: option.Response }))">
-                </b-form-radio-group>
-            </b-card>
-        </div>
-
-        <b-button type="button" variant="primary" @@click="submitForm">Register</b-button>
-
-    </fieldset>
-
+@{
+    Layout = null; // Assuming you don't want any default layout for this page.
 }
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/bootstrap-vue/dist/bootstrap-vue.js"></script>
-<script>
-    Vue.use(BootstrapVue);
-    new Vue({
-        el: '#registrationForm',
-        data: {
-            user: {
-                firstName: '',
-                lastName: '',
-                chineseName: '',
-                sex: '',
-                occupation: '',
-                ageRangeID: '',
-                phoneNumber: '',
-                email: '',
-                address: '',
-                introducedBy: '',
-                existingMember: '',
-                selectedLanguageIds: [],
-                responses: []
-            },
-            ageRanges: [],
-            languages: [],
-            questions: []
-        },
-        mounted() {
-            console.log("Component Mounted")
-            this.fetchAgeRanges();
-            this.fetchLanguages();
-            this.fetchQuestions();
-        },
-        methods: {
-            fetchAgeRanges() {
-                axios.get('/ageranges')
-                    .then(response => {
-                        this.ageRanges = response.data;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching age ranges:', error);
-                    });
-            },
-            fetchLanguages() {
-                axios.get('/languages')
-                    .then(response => {
-                        this.languages = response.data;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching languages:', error);
-                    });
-            },
-            fetchQuestions() {
-                axios.get('/questions')
-                    .then(response => {
-                        this.questions = response.data;
-                        this.initializeResponses();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching questions:', error);
-                    });
-            },
-            initializeResponses() {
-                this.user.responses = this.questions.map(question => ({
-                    QuestionId: question.Id,
-                    ResponseId: null
-                }));
-            },
-            submitForm() {
-                console.log("Submitting")
-                axios.post('/Register', this.user)
-                    .then(response => {
-                        if (response.data.success) {
-                            console.log(response.data.message);
-                            this.resetForm();
-                        } else {
-                            console.lg
-                            console.log(response.data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Submission error:', error);
-                    });
-            },
-            resetForm() {
-                console.log("Resetting form");
-                this.user = {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue/dist/bootstrap-vue.css" />
+</head>
+<body>
+    <div id="app">
+        <b-container class="bv-example-row">
+            <b-row align-h="center">
+                <b-col cols="12" md="10" lg="8">
+                    <b-form @@submit.prevent="submitForm" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <b-card>
+                            <b-card-title>Registration Form</b-card-title>
+                            <b-card-body>
+                                <b-form-group label="First Name:" label-for="input-firstName">
+                                    <b-form-input id="input-firstName" v-model="user.firstName" placeholder="Enter first name" required></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Last Name:" label-for="input-lastName">
+                                    <b-form-input id="input-lastName" v-model="user.lastName" placeholder="Enter last name" required></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Chinese Name:" label-for="input-chineseName">
+                                    <b-form-input id="input-chineseName" v-model="user.chineseName" placeholder="Enter Chinese name"></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Sex:" label-for="select-sex">
+                                    <b-form-select id="select-sex" v-model="user.sex" :options="{ '': 'Select Gender', 'Male': 'Male', 'Female': 'Female', 'Other': 'Other' }" required></b-form-select>
+                                </b-form-group>
+
+                                <b-form-group label="Occupation:" label-for="input-occupation">
+                                    <b-form-input id="input-occupation" v-model="user.occupation" placeholder="Enter occupation"></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Age Range:" label-for="select-ageRange">
+                                    <b-form-select id="select-ageRange" v-model="user.ageRangeID" :options="ageRanges.map(a => ({ value: a.Id, text: a.Range }))" placeholder="Select Age Range" required></b-form-select>
+                                </b-form-group>
+
+                                <b-form-group label="Phone Number:" label-for="input-phone">
+                                    <b-form-input id="input-phone" v-model="user.phoneNumber" placeholder="Enter phone number" required></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Email:" label-for="input-email">
+                                    <b-form-input id="input-email" v-model="user.email" type="email" placeholder="Enter email" required></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Address:" label-for="input-address">
+                                    <b-form-input id="input-address" v-model="user.address" placeholder="Enter address"></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Introduced by:" label-for="input-introducedBy">
+                                    <b-form-input id="input-introducedBy" v-model="user.introducedBy" placeholder="Introduced by"></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Existing Member?">
+                                    <b-form-select v-model="user.existingMember" :options="['Yes', 'No']" required></b-form-select>
+                                </b-form-group>
+
+                                <b-form-group label="Select Languages:">
+                                    <b-form-checkbox-group v-model="user.selectedLanguageIds" :options="languages.map(lang => ({ value: lang.Id, text: lang.Name }))">
+                                    </b-form-checkbox-group>
+                                </b-form-group>
+
+                                <div v-for="(question, qIndex) in questions" :key="question.QuestionId">
+                                    <b-card>
+                                        <template v-slot:header>
+                                            <h4>{{ question.Question }}</h4>
+                                        </template>
+                                        <b-form-radio-group v-model="user.responses[qIndex].ResponseId"
+                                                            :options="question.ResponseOptions.map(option => ({ value: option.Id, text: option.Response }))">
+                                        </b-form-radio-group>
+                                    </b-card>
+                                </div>
+                            </b-card-body>
+
+                            <b-card-footer>
+                                <b-button type="submit" variant="primary">Register</b-button>
+                            </b-card-footer>
+                        </b-card>
+                    </b-form>
+                </b-col>
+            </b-row>
+        </b-container>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue/dist/bootstrap-vue.js"></script>
+    <script>
+        Vue.use(BootstrapVue);
+        new Vue({
+            el: '#app',
+            data: {
+                user: {
                     firstName: '',
                     lastName: '',
                     chineseName: '',
@@ -176,14 +116,91 @@
                     introducedBy: '',
                     existingMember: '',
                     selectedLanguageIds: [],
-                    responses: this.user.responses.map(response => ({
-                        QuestionId: response.QuestionId,
+                    responses: []
+                },
+                ageRanges: [],
+                languages: [],
+                questions: []
+            },
+            mounted() {
+                console.log("Component Mounted")
+                this.fetchAgeRanges();
+                this.fetchLanguages();
+                this.fetchQuestions();
+            },
+            methods: {
+                fetchAgeRanges() {
+                    axios.get('/ageranges')
+                        .then(response => {
+                            this.ageRanges = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching age ranges:', error);
+                        });
+                },
+                fetchLanguages() {
+                    axios.get('/languages')
+                        .then(response => {
+                            this.languages = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching languages:', error);
+                        });
+                },
+                fetchQuestions() {
+                    axios.get('/questions')
+                        .then(response => {
+                            this.questions = response.data;
+                            this.initializeResponses();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching questions:', error);
+                        });
+                },
+                initializeResponses() {
+                    this.user.responses = this.questions.map(question => ({
+                        QuestionId: question.Id,
                         ResponseId: null
-                    }))
-                };
+                    }));
+                },
+                submitForm() {
+                    console.log("Submitting");
+                    axios.post('/Register', this.user)
+                        .then(response => {
+                            if (response.data.success) {
+                                console.log(response.data.message);
+                                this.resetForm();
+                            } else {
+                                console.log(response.data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Submission error:', error);
+                        });
+                },
+                resetForm() {
+                    console.log("Resetting form");
+                    this.user = {
+                        firstName: '',
+                        lastName: '',
+                        chineseName: '',
+                        sex: '',
+                        occupation: '',
+                        ageRangeID: '',
+                        phoneNumber: '',
+                        email: '',
+                        address: '',
+                        introducedBy: '',
+                        existingMember: '',
+                        selectedLanguageIds: [],
+                        responses: this.user.responses.map(response => ({
+                            QuestionId: response.QuestionId,
+                            ResponseId: null
+                        }))
+                    };
+                }
             }
-        }
-    });
-</script>
-
-
+        });
+    </script>
+</body>
+</html>

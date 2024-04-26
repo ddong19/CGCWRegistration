@@ -198,6 +198,7 @@
     <Compile Include="Models\DTOs\LanguageDTO.cs" />
     <Compile Include="Models\DTOs\QuestionDTO.cs" />
     <Compile Include="Models\DTOs\ResponseOptionDTO.cs" />
+    <Compile Include="Models\DTOs\UserDTO.cs" />
     <Compile Include="Models\Entities\AgeRange.cs" />
     <Compile Include="Models\Entities\Language.cs" />
     <Compile Include="Models\Entities\Question.cs" />
