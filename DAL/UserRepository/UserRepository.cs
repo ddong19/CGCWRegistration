@@ -17,7 +17,7 @@ namespace CGCWRegistration.DAL.UserRepository
             _context = context;
         }
         // GET ALL USERS
-        public async Task<IEnumerable<User>> GetAllAgeUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }

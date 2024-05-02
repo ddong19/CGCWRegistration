@@ -21,6 +21,7 @@ using CGCWRegistration.BLL;
 using CGCWRegistration.DAL.UserLanguageRepository;
 using CGCWRegistration.DAL.UserResponseRepository;
 using Newtonsoft.Json;
+using CGCWRegistration.BLL.UsersService;
 
 namespace CGCWRegistration
 {
@@ -37,14 +38,19 @@ namespace CGCWRegistration
             builder.RegisterType<RegistrationContext>()
                    .WithParameter("connectionString", ConfigurationManager.ConnectionStrings["RegistrationContext"].ConnectionString)
                    .InstancePerRequest();
+            // DAL
             builder.RegisterType<LanguageRepository>().As<ILanguageRepository>();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>();
             builder.RegisterType<AgeRangeRepository>().As<IAgeRangeRepository>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
             builder.RegisterType<ResponseOptionRepository>().As<IResponseOptionRepository>();
-            builder.RegisterType<RegistrationService>().As<IRegistrationService>();
             builder.RegisterType<UserLanguageRepository>().As<IUserLanguageRepository>();
             builder.RegisterType<UserResponseRepository>().As<IUserResponseRepository>();
+
+            // BLL
+            builder.RegisterType<RegistrationService>().As<IRegistrationService>();
+            builder.RegisterType<UsersService>().As<IUsersService>();
+
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }

@@ -10,7 +10,7 @@ namespace CGCWRegistration.DAL.UserRepository
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllAgeUsersAsync();
+        Task<IEnumerable<User>> GetAllUsersAsync();
         Task AddUserAsync(UserDTO user);
     }
 }
