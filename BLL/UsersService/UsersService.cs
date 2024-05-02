@@ -17,16 +17,11 @@ namespace CGCWRegistration.BLL.UsersService
     public class UsersService : IUsersService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IAgeRangeRepository _ageRangeRepository;
-        private readonly ILanguageRepository _languageRepository;
         private readonly IQuestionRepository _questionRepository;
 
-        public UsersService(IUserRepository userRepository, IAgeRangeRepository ageRangeRepository,
-                            ILanguageRepository languageRepository, IQuestionRepository questionRepository)
+        public UsersService(IUserRepository userRepository, IQuestionRepository questionRepository)
         {
             _userRepository = userRepository;
-            _ageRangeRepository = ageRangeRepository;
-            _languageRepository = languageRepository;
             _questionRepository = questionRepository;
         }
         public async Task<UsersPageViewModel> PrepareUsersViewModelAsync()

@@ -37,9 +37,10 @@
                 <td>@user.IntroducedBy</td>
                 <td>@user.ExistingMember</td>
                 <td>@string.Join(", ", user.Languages)</td>
-                @foreach (var response in user.Responses)
+                @foreach (var question in Model.Questions)
                 {
-                    <td>@response.Response</td>
+                    var response = user.Responses.FirstOrDefault(r => r.Question == question);
+                    <td>@(response?.Response ?? "No response")</td>
                 }
                 <td>
                     @Html.ActionLink("Delete", "Delete", new { id = user.Id })

@@ -5,18 +5,28 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CGCWRegistration.Models.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace CGCWRegistration.Models.ViewModels
 {
     public class UserRegistrationViewModel
     {
+        [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
         public string ChineseName { get; set; }
+        [Required(ErrorMessage = "Sex is required")]
         public string Sex { get; set; }
         public string Occupation { get; set; }
+        [Required(ErrorMessage = "Age Range is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select an age range")]
         public int AgeRangeID { get; set; }
+        [Required(ErrorMessage = "Phone Number is required")]
+        [Phone(ErrorMessage = "Not a valid phone number")]
         public string PhoneNumber { get; set; }
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Not a valid email address")]
         public string Email { get; set; }
         public string Address { get; set; }
         public string IntroducedBy { get; set; }

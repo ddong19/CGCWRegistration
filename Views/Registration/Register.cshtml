@@ -26,10 +26,16 @@
                             <b-card-body>
                                 <b-form-group label="First Name:" label-for="input-firstName">
                                     <b-form-input id="input-firstName" v-model="user.firstName" placeholder="Enter first name" required></b-form-input>
+                                    <div v-if="errors.FirstName" class="text-danger">
+                                        <div v-for="error in errors.FirstName">{{ error }}</div>
+                                    </div>
                                 </b-form-group>
 
                                 <b-form-group label="Last Name:" label-for="input-lastName">
                                     <b-form-input id="input-lastName" v-model="user.lastName" placeholder="Enter last name" required></b-form-input>
+                                    <div v-if="errors.LastName" class="text-danger">
+                                        <div v-for="error in errors.LastName">{{ error }}</div>
+                                    </div>
                                 </b-form-group>
 
                                 <b-form-group label="Chinese Name:" label-for="input-chineseName">
@@ -41,6 +47,9 @@
                                                         v-model="user.sex"
                                                         :options="['Male', 'Female']" required>
                                     </b-form-radio-group>
+                                    <div v-if="errors.Sex" class="text-danger">
+                                        <div v-for="error in errors.Sex">{{ error }}</div>
+                                    </div>
                                 </b-form-group>
 
                                 <b-form-group label="Occupation:" label-for="input-occupation">
@@ -49,14 +58,23 @@
 
                                 <b-form-group label="Age Range:" label-for="select-ageRange">
                                     <b-form-radio-group id="select-ageRange" v-model="user.ageRangeID" :options="ageRanges.map(a => ({ value: a.Id, text: a.Range }))" required></b-form-radio-group>
+                                    <div v-if="errors.AgeRangeID" class="text-danger">
+                                        <div v-for="error in errors.AgeRangeID">{{ error }}</div>
+                                    </div>
                                 </b-form-group>
 
                                 <b-form-group label="Phone Number:" label-for="input-phone">
                                     <b-form-input id="input-phone" v-model="user.phoneNumber" placeholder="Enter phone number" required></b-form-input>
+                                    <div v-if="errors.PhoneNumber" class="text-danger">
+                                        <div v-for="error in errors.PhoneNumber">{{ error }}</div>
+                                    </div>
                                 </b-form-group>
 
                                 <b-form-group label="Email:" label-for="input-email">
                                     <b-form-input id="input-email" v-model="user.email" type="email" placeholder="Enter email" required></b-form-input>
+                                    <div v-if="errors.Email" class="text-danger">
+                                        <div v-for="error in errors.Email">{{ error }}</div>
+                                    </div>
                                 </b-form-group>
 
                                 <b-form-group label="Address:" label-for="input-address">
@@ -125,7 +143,8 @@
                 },
                 ageRanges: [],
                 languages: [],
-                questions: []
+                questions: [],
+                errors: {}
             },
             mounted() {
                 console.log("Component Mounted")
@@ -176,11 +195,14 @@
                                 console.log(response.data.message);
                                 this.resetForm();
                             } else {
-                                console.log(response.data.message);
+                                this.errors = response.data.error || {};
+                                console.log(this.error);
                             }
                         })
                         .catch(error => {
                             console.error('Submission error:', error);
+                            this.errors = (error.response && error.response.data && error.response.data.errors) || {};
+                            console.log("Error details:", this.errors);
                         });
                 },
                 resetForm() {
