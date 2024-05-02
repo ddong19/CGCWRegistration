@@ -11,6 +11,8 @@ namespace CGCWRegistration.DAL.UserRepository
     public interface IUserRepository
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int userId);
         Task AddUserAsync(UserDTO user);
+        Task DeleteUserAsync(int userId);
     }
 }

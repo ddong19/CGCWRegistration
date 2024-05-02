@@ -7,6 +7,7 @@ namespace CGCWRegistration.Models.ViewModels
 {
     public class UsersViewModel
     {
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ChineseName { get; set; }
@@ -27,5 +28,11 @@ namespace CGCWRegistration.Models.ViewModels
         public int QuestionId { get; set; }
         public string Question { get; set; }
         public string Response { get; set; }
+    }
+
+    public class UsersPageViewModel
+    {
+        public List<UsersViewModel> Users { get; set; }
+        public List<string> Questions { get; set; }
     }
 }

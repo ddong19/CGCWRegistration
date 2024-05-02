@@ -22,6 +22,16 @@ namespace CGCWRegistration.DAL.UserRepository
             return await _context.Users.ToListAsync();
         }
 
+        public async Task<User> GetUserByIdAsync(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserLanguages)
+                .Include(u => u.UserResponses)
+                .FirstOrDefaultAsync(u => u.UserID == userId);
+
+            return user;
+        }
+
         // ADD USER TO DB
         public async Task AddUserAsync(UserDTO userDTO)
         {
@@ -82,6 +92,20 @@ namespace CGCWRegistration.DAL.UserRepository
                     throw; // Re-throw the exception to be handled elsewhere
                 }
             }
+        }
+
+        public async Task DeleteUserAsync(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserLanguages)
+                .Include(u => u.UserResponses)
+                .FirstOrDefaultAsync(u => u.UserID == userId);
+
+            _context.UserLanguages.RemoveRange(user.UserLanguages);
+            _context.UserResponses.RemoveRange(user.UserResponses);
+            _context.Users.Remove(user);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

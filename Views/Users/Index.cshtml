@@ -1,4 +1,4 @@
-@model IEnumerable<CGCWRegistration.Models.ViewModels.UsersViewModel>
+@model CGCWRegistration.Models.ViewModels.UsersPageViewModel
 
 <table class="table">
     <thead>
@@ -15,14 +15,14 @@
             <th>Introduced By</th>
             <th>Existing Member</th>
             <th>Languages</th>
-            @foreach (var question in Model.First().Responses)
+            @foreach (var question in Model.Questions)
             {
-                <th>@question.Question</th>
+                <th>@question</th>
             }
         </tr>
     </thead>
     <tbody>
-        @foreach (var user in Model)
+        @foreach (var user in Model.Users)
         {
             <tr>
                 <td>@user.FirstName</td>
@@ -41,7 +41,11 @@
                 {
                     <td>@response.Response</td>
                 }
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = user.Id })
+                </td>
             </tr>
-        }
-    </tbody>
-</table>
+
+    }
+        </tbody>
+    </table>

@@ -3,11 +3,14 @@ using CGCWRegistration.DAL.LanguageRepository;
 using CGCWRegistration.DAL.QuestionRepository;
 using CGCWRegistration.DAL.UserRepository;
 using CGCWRegistration.Models.ViewModels;
+using CGCWRegistration.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Owin.BuilderProperties;
+using System.Web.Helpers;
 
 namespace CGCWRegistration.BLL.UsersService
 {
@@ -26,31 +29,50 @@ namespace CGCWRegistration.BLL.UsersService
             _languageRepository = languageRepository;
             _questionRepository = questionRepository;
         }
-        public async Task<List<UsersViewModel>> PrepareUsersViewModelAsync()
+        public async Task<UsersPageViewModel> PrepareUsersViewModelAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            var viewModel = users.Select(u => new UsersViewModel
+            var questions = await _questionRepository.GetAllQuestionsAsync();
+
+            var model = new UsersPageViewModel
             {
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                ChineseName = u.ChineseName,
-                Sex = u.Sex,
-                Occupation = u.Occupation,
-                AgeRange = u.AgeRange.Range,
-                PhoneNumber = u.PhoneNumber,
-                Email = u.Email,
-                Address = u.Address,
-                IntroducedBy = u.IntroducedBy,
-                ExistingMember = u.ExistingMember,
-                Languages = u.UserLanguages.Select(l => l.Language.LanguageName).ToList(),
-                Responses = u.UserResponses.Select(r => new QuestionResponseViewModel
+                Users = users.Select(u => new UsersViewModel
                 {
-                    QuestionId = r.QuestionID,
-                    Question = r.Question.QuestionText,
-                    Response = r.ResponseOption.ResponseOptionText
-                }).ToList()
-            }).ToList();
-            return viewModel;
+                    Id = u.UserID,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    ChineseName = u.ChineseName,
+                    Sex = u.Sex,
+                    Occupation = u.Occupation,
+                    AgeRange = u.AgeRange.Range,
+                    PhoneNumber = u.PhoneNumber,
+                    Email = u.Email,
+                    Address = u.Address,
+                    IntroducedBy = u.IntroducedBy,
+                    ExistingMember = u.ExistingMember,
+                    Languages = u.UserLanguages.Select(l => l.Language.LanguageName).ToList(),
+                    Responses = u.UserResponses.Select(r => new QuestionResponseViewModel
+                    {
+                        QuestionId = r.QuestionID,
+                        Question = r.Question.QuestionText,
+                        Response = r.ResponseOption.ResponseOptionText
+                    }).ToList()
+                }).ToList(),
+                Questions = questions.Select(q => q.Question).ToList()
+            };
+
+            return model;
+        }
+
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            return user;
+        }
+
+        public async Task DeleteUserByIdAsync(int id)
+        {
+            await _userRepository.DeleteUserAsync(id);
         }
     }
 }
