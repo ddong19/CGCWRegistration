@@ -1,9 +1,5 @@
 @model CGCWRegistration.Models.ViewModels.UserRegistrationViewModel
 
-@{
-    Layout = null; // Assuming you don't want any default layout for this page.
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +41,12 @@
                                 <b-form-group label="Sex:" label-for="select-sex">
                                     <b-form-radio-group id="select-sex"
                                                         v-model="user.sex"
-                                                        :options="['Male', 'Female']" required>
+                                                        required>
+                                        <template v-slot="{ ariaDescribedby }">
+                                            <b-form-radio v-for="option in [{ value: 'Male', text: 'Male' }, { value: 'Female', text: 'Female' }]">
+                                                &nbsp{{ option.text }}
+                                            </b-form-radio>
+                                        </template>
                                     </b-form-radio-group>
                                     <div v-if="errors.Sex" class="text-danger">
                                         <div v-for="error in errors.Sex">{{ error }}</div>
@@ -57,11 +58,18 @@
                                 </b-form-group>
 
                                 <b-form-group label="Age Range:" label-for="select-ageRange">
-                                    <b-form-radio-group id="select-ageRange" v-model="user.ageRangeID" :options="ageRanges.map(a => ({ value: a.Id, text: a.Range }))" required></b-form-radio-group>
+                                    <b-form-radio-group id="select-ageRange" v-model="user.ageRangeID" required>
+                                        <template v-slot="{ ariaDescribedby }">
+                                            <b-form-radio v-for="range in ageRanges" :key="range.Id" :value="range.Id">
+                                                &nbsp{{ range.Range }}
+                                            </b-form-radio>
+                                        </template>
+                                    </b-form-radio-group>
                                     <div v-if="errors.AgeRangeID" class="text-danger">
                                         <div v-for="error in errors.AgeRangeID">{{ error }}</div>
                                     </div>
                                 </b-form-group>
+
 
                                 <b-form-group label="Phone Number:" label-for="input-phone">
                                     <b-form-input id="input-phone" v-model="user.phoneNumber" placeholder="Enter phone number" required></b-form-input>
@@ -87,12 +95,22 @@
 
                                 <b-form-group label="Existing Member?">
                                     <b-form-radio-group v-model="user.existingMember"
-                                                        :options="['Yes', 'No']" required>
+                                                        required>
+                                        <template v-slot="{ ariaDescribedby }">
+                                            <b-form-radio v-for="option in [{ value: 'Yes', text: 'Yes' }, { value: 'No', text: 'No' }]">
+                                                &nbsp{{ option.text }}
+                                            </b-form-radio>
+                                        </template>
                                     </b-form-radio-group>
                                 </b-form-group>
 
                                 <b-form-group label="Select Languages:">
-                                    <b-form-checkbox-group v-model="user.selectedLanguageIds" :options="languages.map(lang => ({ value: lang.Id, text: lang.Name }))">
+                                    <b-form-checkbox-group v-model="user.selectedLanguageIds">
+                                        <template v-slot="{ ariaDescribedby }">
+                                            <b-form-radio v-for="lang in languages" :key="lang.Id" :value="lang.Id">
+                                                &nbsp{{ lang.Name }}
+                                            </b-form-radio>
+                                        </template>
                                     </b-form-checkbox-group>
                                 </b-form-group>
 
@@ -101,8 +119,12 @@
                                         <template v-slot:header>
                                             <h4>{{ question.Question }}</h4>
                                         </template>
-                                        <b-form-radio-group v-model="user.responses[qIndex].ResponseId"
-                                                            :options="question.ResponseOptions.map(option => ({ value: option.Id, text: option.Response }))">
+                                        <b-form-radio-group v-model="user.responses[qIndex].ResponseId">
+                                            <template v-slot="{ ariaDescribedby }">
+                                                <b-form-radio v-for="q in question.ResponseOptions" :key="q.Id" :value="q.Id">
+                                                    &nbsp{{ q.Response }}
+                                                </b-form-radio>
+                                            </template>
                                         </b-form-radio-group>
                                     </b-card>
                                 </div>
