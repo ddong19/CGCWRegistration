@@ -43,7 +43,7 @@
                                                         v-model="user.sex"
                                                         required>
                                         <template v-slot="{ ariaDescribedby }">
-                                            <b-form-radio v-for="option in [{ value: 'Male', text: 'Male' }, { value: 'Female', text: 'Female' }]">
+                                            <b-form-radio v-for="option in [{ value: 'Male', text: 'Male' }, { value: 'Female', text: 'Female' }]" :key="option.value" :value="option.value">
                                                 &nbsp{{ option.text }}
                                             </b-form-radio>
                                         </template>
@@ -97,7 +97,7 @@
                                     <b-form-radio-group v-model="user.existingMember"
                                                         required>
                                         <template v-slot="{ ariaDescribedby }">
-                                            <b-form-radio v-for="option in [{ value: 'Yes', text: 'Yes' }, { value: 'No', text: 'No' }]">
+                                            <b-form-radio v-for="option in [{ value: 'Yes', text: 'Yes' }, { value: 'No', text: 'No' }]" :key="option.value" :value="option.value">
                                                 &nbsp{{ option.text }}
                                             </b-form-radio>
                                         </template>
@@ -107,9 +107,9 @@
                                 <b-form-group label="Select Languages:">
                                     <b-form-checkbox-group v-model="user.selectedLanguageIds">
                                         <template v-slot="{ ariaDescribedby }">
-                                            <b-form-radio v-for="lang in languages" :key="lang.Id" :value="lang.Id">
+                                            <b-form-checkbox v-for="lang in languages" :key="lang.Id" :value="lang.Id">
                                                 &nbsp{{ lang.Name }}
-                                            </b-form-radio>
+                                            </b-form-checkbox>
                                         </template>
                                     </b-form-checkbox-group>
                                 </b-form-group>
