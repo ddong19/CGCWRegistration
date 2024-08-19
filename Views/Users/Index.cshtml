@@ -1,52 +1,88 @@
 @model CGCWRegistration.Models.ViewModels.UsersPageViewModel
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Chinese Name</th>
-            <th>Sex</th>
-            <th>Occupation</th>
-            <th>Age Range</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Introduced By</th>
-            <th>Existing Member</th>
-            <th>Languages</th>
-            @foreach (var question in Model.Questions)
-            {
-                <th>@question</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
-        {
-            <tr>
-                <td>@user.FirstName</td>
-                <td>@user.LastName</td>
-                <td>@user.ChineseName</td>
-                <td>@user.Sex</td>
-                <td>@user.Occupation</td>
-                <td>@user.AgeRange</td>
-                <td>@user.PhoneNumber</td>
-                <td>@user.Email</td>
-                <td>@user.Address</td>
-                <td>@user.IntroducedBy</td>
-                <td>@user.ExistingMember</td>
-                <td>@string.Join(", ", user.Languages)</td>
-                @foreach (var question in Model.Questions)
-                {
-                    var response = user.Responses.FirstOrDefault(r => r.Question == question);
-                    <td>@(response?.Response ?? "No response")</td>
-                }
-                <td>
-                    @Html.ActionLink("Delete", "Delete", new { id = user.Id })
-                </td>
-            </tr>
+@{
+    ViewBag.Title = "Users";
+}
 
-    }
-        </tbody>
-    </table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Users</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Chinese Name</th>
+                    <th>Sex</th>
+                    <th>Occupation</th>
+                    <th>Age Range</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Introduced By</th>
+                    <th>Existing Member</th>
+                    <th>Languages</th>
+                    @foreach (var question in Model.Questions)
+                    {
+                        <th>@question</th>
+                    }
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.ChineseName</td>
+                        <td>@user.Sex</td>
+                        <td>@user.Occupation</td>
+                        <td>@user.AgeRange</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.Email</td>
+                        <td>@user.Address</td>
+                        <td>@user.IntroducedBy</td>
+                        <td>@user.ExistingMember</td>
+                        <td>@string.Join(", ", user.Languages)</td>
+                        @foreach (var question in Model.Questions)
+                        {
+                            var response = user.Responses.FirstOrDefault(r => r.Question == question);
+                            <td>@(response?.Response ?? "No response")</td>
+                        }
+                        <td>
+                            @if (Session["auth"] != null && Session["auth"].ToString() == "admin")
+                            {
+                                @Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "btn btn-danger btn-sm" })
+                            }
+                            else
+                            {
+                                <span>View Only</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const auth = sessionStorage.getItem('auth');
+        if (!auth) {
+            window.location.href = '/login';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Your existing JavaScript logic here, if needed
+        });
+    </script>
+</body>
+</html>
