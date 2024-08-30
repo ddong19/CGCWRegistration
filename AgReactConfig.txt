@@ -1,0 +1,122 @@
+(1) npm init -y
+
+(2) npm install react react-dom webpack webpack-cli babel-loader @babel/core @babel/preset-env @babel/preset-react
+
+(3) npm install ag-grid-community ag-grid-react
+
+(4) npm install style-loader css-loader --save-dev
+
+(5) create webpack.config.js in project folder 
+
+		const path = require('path');
+
+		module.exports = {
+			// Entry point for the application
+			entry: './Scripts/app.jsx',
+			
+			// Output configuration
+			output: {
+				path: path.resolve(__dirname, 'wwwroot/js'),
+				filename: 'bundle.js'
+			},
+			
+			// Module rules for processing files
+			module: {
+				rules: [
+					{
+						test: /\.(js|jsx)$/,
+						exclude: /node_modules/,
+						use: {
+							loader: 'babel-loader',
+							options: {
+								presets: ['@babel/preset-env', '@babel/preset-react']
+							}
+						}
+					},
+					{
+						test: /\.css$/, // Target CSS files
+						use: ['style-loader', 'css-loader'] 
+					}
+				]
+			},
+			
+			// Resolve extensions for imports
+			resolve: {
+				extensions: ['.js', '.jsx']
+			},
+			
+			// Development mode for better debugging
+			mode: 'development'
+		};
+		
+(6) Add a div in your view where the React component will be rendered:
+     <div id="root"></div>
+     <script src="~/wwwroot/js/bundle.js"></script>
+	 
+(7) add a build script to package.json for convenience:
+    "scripts": {
+       "build": "webpack --config webpack.config.js"
+    }
+	 
+
+(7) Ensure that your entry point file app.jsx correctly imports react and react-dom. Here’s an example:
+
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import AgDataGridEx from './AgDataGridEx';
+
+	const App = () => {
+		return (
+			<div>
+				<h1>Hello, React!</h1>
+				<AgDataGridEx />
+			</div>
+		);
+	};
+
+	ReactDOM.render(<AgDataGridEx />, document.getElementById('root'));
+	 
+ (8) Create AgDataGridEx.jsx and call MVC controller to get data to display
+ 
+		import React, { useState, useEffect } from 'react';
+		import { AgGridReact } from 'ag-grid-react';
+		import 'ag-grid-community/styles/ag-grid.css';
+		import 'ag-grid-community/styles/ag-theme-alpine.css'; // Or your chosen theme
+
+		const AgDataGridEx = () => {
+			const [rowData, setRowData] = useState([]); 
+
+			useEffect(() => {
+				// Fetch data from your ASP.NET MVC controller
+				fetch('/MyData/GetData') // Adjust the URL as needed
+					.then(response => response.json())
+					.then(data => setRowData(data));
+			}, []);
+
+			const columnDefs = [
+				{ field: 'id', headerName: 'ID' },
+				{ field: 'name', headerName: 'Name' },
+				// ... more column definitions
+			];
+
+			return (
+				<div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
+					<AgGridReact
+						rowData={rowData}
+						columnDefs={columnDefs}
+					></AgGridReact>
+				</div>
+			);
+		};
+
+		export default AgDataGridEx;
+	
+(9) In .csproj file, add 
+    
+	<Target Name="PreBuild" BeforeTargets="Build">
+    <Exec Command="npm run build" />
+    </Target>
+	
+(10) Refer to https://www.ag-grid.com/react-data-grid/getting-started/ for more details and examples of AgGridReact 
+
+
