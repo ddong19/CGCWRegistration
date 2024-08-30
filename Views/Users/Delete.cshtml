@@ -119,3 +119,10 @@
         </div>
     }
 </div>
+
+<script>
+        const auth = sessionStorage.getItem('auth');
+        if (!auth) {
+            window.location.href = '/login';
+        }
+</script>
