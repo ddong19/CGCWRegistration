@@ -11,8 +11,8 @@ namespace CGCWRegistration.BLL.UsersService
 {   
     public interface IUsersService
     {
-        Task<UsersPageViewModel> PrepareUsersViewModelAsync();
         Task<User> GetUserByIdAsync(int id);
         Task DeleteUserByIdAsync(int id);
+        Task<List<UsersViewModel>> ListUsersAsync();
     }
 }

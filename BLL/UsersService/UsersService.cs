@@ -24,14 +24,12 @@ namespace CGCWRegistration.BLL.UsersService
             _userRepository = userRepository;
             _questionRepository = questionRepository;
         }
-        public async Task<UsersPageViewModel> PrepareUsersViewModelAsync()
-        {
-            var users = await _userRepository.GetAllUsersAsync();
-            var questions = await _questionRepository.GetAllQuestionsAsync();
 
-            var model = new UsersPageViewModel
-            {
-                Users = users.Select(u => new UsersViewModel
+        public async Task<List<UsersViewModel>> ListUsersAsync()
+        {
+            IEnumerable<User> users = await _userRepository.GetAllUsersAsync();
+            List<UsersViewModel> vmUsers = users
+                .Select(u => new UsersViewModel
                 {
                     Id = u.UserID,
                     FirstName = u.FirstName,
@@ -52,11 +50,8 @@ namespace CGCWRegistration.BLL.UsersService
                         Question = r.Question.QuestionText,
                         Response = r.ResponseOption.ResponseOptionText
                     }).ToList()
-                }).ToList(),
-                Questions = questions.Select(q => q.Question).ToList()
-            };
-
-            return model;
+                }).ToList();
+            return vmUsers;
         }
 
         public async Task<User> GetUserByIdAsync(int id)

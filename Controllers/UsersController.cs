@@ -24,10 +24,16 @@ namespace CGCWRegistration.Controllers
 
 
         [Route("users")]
-        public async Task<ActionResult> Users()
+        public ActionResult Users()
         {
-            var viewModel = await _usersService.PrepareUsersViewModelAsync();
-            return View("Index", viewModel);
+            return View("Index");
+        }
+
+        [Route("users/list")]
+        public async Task<ActionResult> ListUsers()
+        {
+            List<UsersViewModel> users = await _usersService.ListUsersAsync();
+            return Json(users, JsonRequestBehavior.AllowGet);
         }
 
         // GET: User/Delete/5
