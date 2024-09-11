@@ -1,0 +1,180 @@
+﻿form {
+    display: flex;
+    flex-direction: column;
+    width: 800px; /* Adjust width as needed */
+    margin: auto;
+}
+
+h2, h6{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-row .form-group:last-child {
+    margin-right: 0;
+}
+
+.form-group-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-group-row label {
+    flex: 0 0 120px; /* Adjust label width as needed */
+    margin-right: 10px; /* Adjust spacing between label and input */
+    text-align: right;
+    font-weight: bold; /* Make label font bold */
+}
+
+.form-group-row input, .form-group-row select, .form-group-row .input-mask {
+    flex: 1;
+    flex-shrink: 0; /* Prevent shrinking */
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.input-address {
+    width: 300px; /* Adjust width as needed */
+    max-width: calc(100% - 130px); /* Ensures input does not exceed form boundary */
+}
+/*
+.form-group input, .form-group select {
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+}*/
+/*
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-group label {
+    margin-bottom: 5px;
+}*/
+
+.checkbox-group {
+    display: flex;
+    flex-direction: row; /* checkbox to be same row*/
+    justify-content: space-between;
+    width: 100%;
+}
+
+.checkbox-group label {
+    display: flex; /* checkbox and it's label to be same row*/
+    align-items: center;
+    margin-right: 10px; /* Adjust spacing as needed */
+    white-space: nowrap; /* Prevent label from wrapping to a new line */
+    font-weight: normal;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px; /* Adjust spacing between checkbox and label text */
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px; /* Adjust spacing between radio buttons */
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+}
+
+.radio-item input[type="radio"] {
+    margin-right: 10px; /* Adjust spacing between radio button and label text */
+}
+
+
+.radio-item label {
+    margin-left: 35px; /* Adjust spacing between radio button and label text */
+    white-space: nowrap; /* Prevent label from wrapping to a new line */
+    font-weight: normal; /* Ensure radio-item label is not bold */
+}
+
+.question-row1 {
+    background-color: #2c3e50; /* Dark blue background color */
+    color: #ffffff; /* White text color for better contrast */
+    padding: 15px; /* Adjust padding for better spacing */
+    margin-bottom: 10px; /* Space between question and answers */
+    width: 100%; /* Ensure it spans the whole width of the form */
+    box-sizing: border-box; /* Includes padding in the element's total width */
+    font-weight: bold; /* Make question text bold */
+    border-radius: 5px; /* Slightly round the corners for a smoother look */
+}
+
+/*background-color: #34495e;*/
+
+.question-row {
+    background-color: #4f6780; /* Slightly lighter blue background color */
+    color: #ffffff; /* White text color for better contrast */
+    padding: 8px 15px; /* Adjust padding for better spacing */
+    margin-bottom: 10px; /* Space between question and answers */
+    width: 100%; /* Ensure it spans the whole width of the form */
+    box-sizing: border-box; /* Includes padding in the element's total width */
+    font-weight: bold; /* Make question text bold */
+    border-radius: 5px; /* Slightly round the corners for a smoother look */
+}
+
+
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-left: 130px;
+    margin-top: -12px; /* Adjust spacing between input and error message */
+}
+
+.error-message-radio {
+    color: red;
+    font-size: 12px;
+    margin-left: 30px;
+    margin-top: 0px; /* Adjust spacing between input and error message */
+}
+
+
+button {
+    background-color: #2c3e50; /* Dark blue background color */
+    padding: 10px;
+    color: #ffffff; /* White text color for better contrast */
+    font-size: 16px;
+    cursor: pointer;
+    box-sizing: border-box; /* Includes padding in the element's total width */
+    font-weight: bold; /* Make question text bold */
+    margin-top: 15px;
+    border-radius: 5px; /* Slightly round the corners for a smoother look */
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ccc; /* Adjust color and style as needed */
+    margin: 10px 0; /* Adjust spacing as needed */
+}
+
+p {
+    color: red;
+    font-size: 12px;
+}

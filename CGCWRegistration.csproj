@@ -272,6 +272,11 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\RegisterForm - Copy.js" />
+    <Content Include="Scripts\RegisterForm - Copy.css" />
+    <Content Include="Scripts\RegisterForm.js" />
+    <Content Include="Scripts\RegisterForm.css" />
+    <Content Include="Scripts\RegisterFormMVC.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -298,6 +303,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="BLL\ValidationService\" />
     <Folder Include="Views\Car\" />
+    <Folder Include="Views\Register\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
