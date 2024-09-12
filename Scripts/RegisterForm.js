@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import './RegisterForm.css';
@@ -7,24 +7,32 @@ const RegisterForm = () => {
     // Initialize state
     const [formData, setFormData] = useState({
         chineseName: '',
-        englishName: '',
+        firstName: '',
+        lastName: '',
         sex: '',
         occupation: '',
-        age: '',
-        languages: [],
-        address: '',
-        telephone: '',
+        ageRangeID: '',
+        phoneNumber: '',
         email: '',
-        birthPlace: '',
+        address: '',
         introducedBy: '',
+        selectedLanguageIds: [],
+        birthPlace: '',
         reasonToVisit: '',
         relationWithGod: '',
         beVisited: '',
         joinCellGroup: ''
     });
 
+    const [ageRanges, setAgeRanges] = useState([]);
+    const [languages, setLanguages] = useState([]);
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        fetchAgeRanges();
+        fetchLanguages();
+    }, []);
 
     // Handle input change
     const handleChange = (e) => {
@@ -33,12 +41,12 @@ const RegisterForm = () => {
             if (checked) {
                 setFormData((prevData) => ({
                     ...prevData,
-                    languages: [...prevData.languages, value]
+                    selectedLanguageIds: [...prevData.selectedLanguageIds, value]
                 }));
             } else {
                 setFormData((prevData) => ({
                     ...prevData,
-                    languages: prevData.languages.filter((lang) => lang !== value)
+                    selectedLanguageIds: prevData.selectedLanguageIds.filter((lang) => lang !== value)
                 }));
             }
         }
@@ -55,19 +63,39 @@ const RegisterForm = () => {
         }
     };
 
+    const fetchAgeRanges = async () => {
+        axios.get('/ageranges')
+            .then(response => {
+                setAgeRanges(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching age ranges:', error);
+            });
+    };
+
+    const fetchLanguages = async () => {
+        axios.get('/languages')
+            .then(response => {
+                setLanguages(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching languages:', error);
+            })
+    }
+
     // Validate the form
     const validate = () => {
         let tempErrors = {};
         if (!formData.chineseName) tempErrors.chineseName = "Chinese Name is required";
         if (!formData.sex) tempErrors.sex = "Sex is required";
         if (!formData.email) tempErrors.email = "Email is required";
-        if (!formData.age) tempErrors.age = "Age is required";
-        if (formData.languages.length === 0) tempErrors.languages = "At least one language is required";
+        if (!formData.ageRangeID) tempErrors.ageRangeID = "Age is required";
+        if (formData.selectedLanguageIds.length === 0) tempErrors.languages = "At least one language is required";
         if (!formData.reasonToVisit) tempErrors.reasonToVisit = "Please select a reason for your visit";
         if (!formData.relationWithGod) tempErrors.relationWithGod = "Please select a relationship with God";
         if (!formData.beVisited) tempErrors.beVisited = "Please select if you like to be visited";
         if (!formData.joinCellGroup) tempErrors.joinCellGroup = "Please select if you like to attend cell group meetings";
-        if (!formData.telephone) tempErrors.telephone = "Telephone number is required";
+        if (!formData.phoneNumber) tempErrors.phoneNumber = "phoneNumber number is required";
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
@@ -84,8 +112,8 @@ const RegisterForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <h2>Chinese Gospel Church New Friends Registration</h2>
-            <hr /> {/* Add a horizontal line to start a new section */}
-            <div className="question-row">Welcom to God's House. We hope the love of God flow along us by knowing and caring of you</div>
+            <hr /> {}
+            <div className="question-row">Welcome to God's House. We hope the love of God flow along us by knowing and caring of you</div>
             <div className="form-row">
                 <div className="form-group">
                     <div className="form-group-row">
@@ -101,15 +129,27 @@ const RegisterForm = () => {
                 </div>
                 <div className="form-group">
                     <div className="form-group-row">
-                        <label>English Name:</label>
+                        <label>First Name:</label>
                         <input
                             type="text"
-                            name="englishName"
-                            value={formData.englishName}
+                            name="firstName"
+                            value={formData.firstName}
                             onChange={handleChange}
                         />
                     </div>
-                    {errors.englishName && <p className="error-message">{errors.englishName}</p>}
+                    {errors.firstName && <p className="error-message">{errors.firstName}</p>}
+                </div>
+                <div className="form-group">
+                    <div className="form-group-row">
+                        <label>Last Name:</label>
+                        <input
+                            type="text"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    {errors.lastName && <p className="error-message">{errors.lastName}</p>}
                 </div>
             </div>
             <div className="form-row">
@@ -118,8 +158,8 @@ const RegisterForm = () => {
                         <label>Sex:</label>
                         <select name="sex" value={formData.sex} onChange={handleChange}>
                             <option value="">select your sex</option>
-                            <option value="male">male</option>
-                            <option value="female">female</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
                         </select>
                     </div>
                     {errors.sex && <p className="error-message">{errors.sex}</p>}
@@ -137,17 +177,21 @@ const RegisterForm = () => {
                 </div>
                 <div className="form-group">
                     <div className="form-group-row">
-                        <label>Age:</label>
-                        <select name="age" value={formData.age} onChange={handleChange}>
-                            <option value="">select your age range</option>
-                            <option value="under 20">Under 20</option>
-                            <option value="21-30">21-30</option>
-                            <option value="31-40">31-40</option>
-                            <option value="41-55">41-55</option>
-                            <option value="56 and above">56 and above</option>
+                        <label htmlFor="ageRange">Age:</label>
+                        <select
+                            name="ageRangeID"
+                            value={formData.ageRangeID}
+                            onChange={handleChange}
+                        >
+                            <option value="">Select your age range</option>
+                            {ageRanges.map(range => (
+                                <option key={range.Id} value={range.Id}>
+                                    {range.Range}
+                                </option>
+                            ))}
                         </select>
                     </div>
-                    {errors.age && <p className="error-message">{errors.age}</p>}
+                    {errors.ageRangeID && <p className="error-message">{errors.ageRangeID}</p>}
                 </div>
             </div>
 
@@ -160,7 +204,7 @@ const RegisterForm = () => {
                                 type="checkbox"
                                 name="languages"
                                 value="English"
-                                checked={formData.languages.includes('English')}
+                                checked={formData.selectedLanguageIds.includes('English')}
                                 onChange={handleChange}
                             />
                             English
@@ -170,7 +214,7 @@ const RegisterForm = () => {
                                 type="checkbox"
                                 name="languages"
                                 value="Chinese"
-                                checked={formData.languages.includes('Chinese')}
+                                checked={formData.selectedLanguageIds.includes('Chinese')}
                                 onChange={handleChange}
                             />
                             Chinese
@@ -180,7 +224,7 @@ const RegisterForm = () => {
                                 type="checkbox"
                                 name="languages"
                                 value="Cantonese"
-                                checked={formData.languages.includes('Cantonese')}
+                                checked={formData.selectedLanguageIds.includes('Cantonese')}
                                 onChange={handleChange}
                             />
                             Cantonese
@@ -190,7 +234,7 @@ const RegisterForm = () => {
                                 type="checkbox"
                                 name="languages"
                                 value="Others"
-                                checked={formData.languages.includes('Others')}
+                                checked={formData.selectedLanguageIds.includes('Others')}
                                 onChange={handleChange}
                             />
                             Others
@@ -199,6 +243,25 @@ const RegisterForm = () => {
                 </div>
                 {errors.languages && <p className="error-message">{errors.languages}</p>}
             </div>
+
+            {/*<div className="form-group">*/}
+            {/*    <label>Languages:</label>*/}
+            {/*    <div className="checkbox-group">*/}
+            {/*        {languages.map((lang) => (*/}
+            {/*            <label key={lang.Id}>*/}
+            {/*                <input*/}
+            {/*                    type="checkbox"*/}
+            {/*                    name="selectedLanguageIds"*/}
+            {/*                    value={lang.Id}*/}
+            {/*                    checked={formData.selectedLanguageIds.includes(lang.Id)}*/}
+            {/*                    onChange={handleChange}*/}
+            {/*                />*/}
+            {/*                {lang.Name}*/}
+            {/*            </label>*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*    {errors.languages && <p className="error-message">{errors.languages}</p>}*/}
+            {/*</div>*/}
             <div className="form-row">
                 <div className="form-group">
                     <div className="form-group-row">
@@ -216,17 +279,17 @@ const RegisterForm = () => {
             <div className="form-row">
                 <div className="form-group">
                     <div className="form-group-row">
-                        <label>Telephone:</label>
+                        <label>Phone Number:</label>
                         <InputMask
                             mask="(999) 999-9999"
-                            name="telephone"
-                            value={formData.telephone}
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
                             onChange={handleChange}
                         >
                             {(inputProps) => <input type="tel" {...inputProps} />}
                         </InputMask>
                     </div>
-                    {errors.telephone && <p className="error-message">{errors.telephone}</p>}
+                    {errors.phoneNumber && <p className="error-message">{errors.phoneNumber}</p>}
                 </div>
                 <div className="form-group">
                     <div className="form-group-row">
@@ -266,7 +329,7 @@ const RegisterForm = () => {
                 </div>
             </div>
 
-            <hr /> {/* Add a horizontal line to start a new section */}
+            <hr />
 
 
             <div className="form-group">
@@ -395,7 +458,7 @@ const RegisterForm = () => {
                 {errors.joinCellGroup && <p className="error-message-radio">{errors.joinCellGroup}</p>}
             </div>
 
-            <hr /> {/* Add a horizontal line to start a new section */}
+            <hr /> {}
 
             <button type="submit">Register</button>
             {message && <p>{message}</p>}
