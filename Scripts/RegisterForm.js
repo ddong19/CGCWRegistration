@@ -17,51 +17,50 @@ const RegisterForm = () => {
         address: '',
         introducedBy: '',
         selectedLanguageIds: [],
-        birthPlace: '',
-        reasonToVisit: '',
-        relationWithGod: '',
-        beVisited: '',
-        joinCellGroup: ''
+        //birthPlace: '',
+        responses: []
     });
 
     const [ageRanges, setAgeRanges] = useState([]);
     const [languages, setLanguages] = useState([]);
+    const [questions, setQuestions] = useState([]);
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
 
     useEffect(() => {
         fetchAgeRanges();
         fetchLanguages();
+        fetchQuestions();
     }, []);
 
-    // Handle input change
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { value, type, checked } = e.target;
         if (type === 'checkbox') {
-            if (checked) {
-                setFormData((prevData) => ({
-                    ...prevData,
-                    selectedLanguageIds: [...prevData.selectedLanguageIds, value]
-                }));
-            } else {
-                setFormData((prevData) => ({
-                    ...prevData,
-                    selectedLanguageIds: prevData.selectedLanguageIds.filter((lang) => lang !== value)
-                }));
-            }
-        }
-        else if (type === 'radio') {
-            setFormData({
-                ...formData,
-                [name]: value
+            setFormData((prevData) => {
+                const updatedIds = checked
+                    ? [...prevData.selectedLanguageIds, String(value)]
+                    : prevData.selectedLanguageIds.filter((lang) => lang !== String(value));
+
+                return { ...prevData, selectedLanguageIds: updatedIds };
             });
         } else {
-            setFormData({
-                ...formData,
-                [name]: value
-            });
+            setFormData((prevData) => ({ ...prevData, [e.target.name]: value }));
         }
     };
+
+    const handleResponseChange = (e, qIndex) => {
+        const { value } = e.target;
+        setFormData((prevData) => {
+            const updatedResponses = [...prevData.responses];
+            updatedResponses[qIndex] = {
+                ...updatedResponses[qIndex],
+                ResponseId: String(value)
+            };
+            console.log("Updated Responses: ", updatedResponses)
+            return { ...prevData, responses: updatedResponses };
+        });
+    };
+
 
     const fetchAgeRanges = async () => {
         axios.get('/ageranges')
@@ -80,6 +79,16 @@ const RegisterForm = () => {
             })
             .catch(error => {
                 console.error('Error fetching languages:', error);
+            })
+    }
+
+    const fetchQuestions = async () => {
+        axios.get('/questions')
+            .then(response => {
+                setQuestions(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching questions:', error);
             })
     }
 
@@ -105,7 +114,21 @@ const RegisterForm = () => {
         e.preventDefault();
         if (validate()) {
             console.log("Form data submitted:", formData);
-            // Perform registration logic here
+            axios.post('/Register', formData)
+                .then(response => {
+                    if (response.data.success) {
+                        console.log(response.data.message);
+/*                        this.resetForm();*/
+                    } else {
+                        errors = response.data.error || {};
+                        console.log(errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Submission error:', errors);
+                    errors = (error.response && error.response.data && error.response.data.errors) || {};
+                    console.log("Error details:", errors)
+                });
         }
     };
 
@@ -199,69 +222,23 @@ const RegisterForm = () => {
                 <div className="form-group-row">
                     <label>Languages:</label>
                     <div className="checkbox-group">
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="languages"
-                                value="English"
-                                checked={formData.selectedLanguageIds.includes('English')}
-                                onChange={handleChange}
-                            />
-                            English
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="languages"
-                                value="Chinese"
-                                checked={formData.selectedLanguageIds.includes('Chinese')}
-                                onChange={handleChange}
-                            />
-                            Chinese
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="languages"
-                                value="Cantonese"
-                                checked={formData.selectedLanguageIds.includes('Cantonese')}
-                                onChange={handleChange}
-                            />
-                            Cantonese
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="languages"
-                                value="Others"
-                                checked={formData.selectedLanguageIds.includes('Others')}
-                                onChange={handleChange}
-                            />
-                            Others
-                        </label>
+                        {languages.map((lang) => (
+                            <label key={lang.Id}>
+                                <input
+                                    type="checkbox"
+                                    name="selectedLanguageIds"
+                                    value={String(lang.Id)}
+                                    checked={formData.selectedLanguageIds.includes(String(lang.Id))}
+                                    onChange={handleChange}
+                                />
+                                {lang.Name}
+                            </label>
+                        ))}
                     </div>
+                    {errors.languages && <p className="error-message">{errors.languages}</p>}
                 </div>
-                {errors.languages && <p className="error-message">{errors.languages}</p>}
             </div>
 
-            {/*<div className="form-group">*/}
-            {/*    <label>Languages:</label>*/}
-            {/*    <div className="checkbox-group">*/}
-            {/*        {languages.map((lang) => (*/}
-            {/*            <label key={lang.Id}>*/}
-            {/*                <input*/}
-            {/*                    type="checkbox"*/}
-            {/*                    name="selectedLanguageIds"*/}
-            {/*                    value={lang.Id}*/}
-            {/*                    checked={formData.selectedLanguageIds.includes(lang.Id)}*/}
-            {/*                    onChange={handleChange}*/}
-            {/*                />*/}
-            {/*                {lang.Name}*/}
-            {/*            </label>*/}
-            {/*        ))}*/}
-            {/*    </div>*/}
-            {/*    {errors.languages && <p className="error-message">{errors.languages}</p>}*/}
-            {/*</div>*/}
             <div className="form-row">
                 <div className="form-group">
                     <div className="form-group-row">
@@ -276,6 +253,7 @@ const RegisterForm = () => {
                     </div>
                 </div>
             </div>
+
             <div className="form-row">
                 <div className="form-group">
                     <div className="form-group-row">
@@ -304,18 +282,19 @@ const RegisterForm = () => {
                     {errors.email && <p className="error-message">{errors.email}</p>}
                 </div>
             </div>
+
             <div className="form-row">
-                <div className="form-group">
-                    <div className="form-group-row">
-                        <label>Birth Place:</label>
-                        <input
-                            type="text"
-                            name="birthPlace"
-                            value={formData.birthPlace}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
+                {/*<div className="form-group">*/}
+                {/*    <div className="form-group-row">*/}
+                {/*        <label>Birth Place:</label>*/}
+                {/*        <input*/}
+                {/*            type="text"*/}
+                {/*            name="birthPlace"*/}
+                {/*            value={formData.birthPlace}*/}
+                {/*            onChange={handleChange}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
                 <div className="form-group">
                     <div className="form-group-row">
                         <label>Introduced By:</label>
@@ -333,130 +312,31 @@ const RegisterForm = () => {
 
 
             <div className="form-group">
-                <div className="question-row">The reason you come to this church?</div>
-                <div className="radio-group">
-                    <div className="radio-item">
-                        <label>
-                            <input
-                                type="radio"
-                                name="reasonToVisit"
-                                value="visiting"
-                                checked={formData.reasonToVisit.includes('visiting')}
-                                onChange={handleChange}
-                            />
-                            are visiting
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="reasonToVisit"
-                                value="living"
-                                checked={formData.reasonToVisit.includes('living')}
-                                onChange={handleChange}
-                            />
-                            live in this area
-                        </label>
+                {questions.map((question, qIndex) => (
+                    <div key={question.QuestionId}>
+                        <div className="question-row">{question.Question}</div>
+                        <div className="radio-group">
+                            {question.ResponseOptions.map((option) => (
+                                <div key={option.Id} className="radio-item">
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name={`response_${qIndex}`}
+                                            value={String(option.Id)}
+                                            checked={formData.responses[qIndex]?.ResponseId === String(option.Id)}
+                                            onChange={(e) => handleResponseChange(e, qIndex)}
+                                        />
+                                        {option.Response}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {errors[`response_${qIndex}`] && <p className="error-message-radio">{errors[`response_${qIndex}`]}</p>}
+                        <hr />
                     </div>
-                </div>
-                {errors.reasonToVisit && <p className="error-message-radio">{errors.reasonToVisit}</p>}
+                ))}
             </div>
 
-            <div className="form-group">
-                <div className="question-row">Your relationship with God?</div>
-                <div className="radio-group">
-                    <div className="radio-item">
-                        <label>
-                            <input
-                                type="radio"
-                                name="relationWithGod"
-                                value="Baptized"
-                                checked={formData.relationWithGod.includes('Baptized')}
-                                onChange={handleChange}
-                            />
-                            Baptized
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="relationWithGod"
-                                value="notbaptized"
-                                checked={formData.relationWithGod.includes('notbaptized')}
-                                onChange={handleChange}
-                            />
-                            Belive in HIM but not baptized
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="relationWithGod"
-                                value="Liketoknow"
-                                checked={formData.relationWithGod.includes('Liketoknow')}
-                                onChange={handleChange}
-                            />
-                            Like to know
-                        </label>
-                    </div>
-                </div>
-                {errors.relationWithGod && <p className="error-message-radio">{errors.relationWithGod}</p>}
-            </div>
-
-            <div className="form-group">
-                <div className="question-row">Do you like to be visited?</div>
-                <div className="radio-group">
-                    <div className="radio-item">
-                        <label>
-                            <input
-                                type="radio"
-                                name="beVisited"
-                                value="Yes"
-                                checked={formData.beVisited.includes('Yes')}
-                                onChange={handleChange}
-                            />
-                            Yes
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="beVisited"
-                                value="No"
-                                checked={formData.beVisited.includes('No')}
-                                onChange={handleChange}
-                            />
-                            No
-                        </label>
-                    </div>
-                </div>
-                {errors.beVisited && <p className="error-message-radio">{errors.beVisited}</p>}
-            </div>
-
-            <div className="form-group">
-                <div className="question-row">Do you want to attend our cell group meetings?</div>
-                <div className="radio-group">
-                    <div className="radio-item">
-                        <label>
-                            <input
-                                type="radio"
-                                name="joinCellGroup"
-                                value="Yes"
-                                checked={formData.joinCellGroup.includes('Yes')}
-                                onChange={handleChange}
-                            />
-                            Yes
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="joinCellGroup"
-                                value="No"
-                                checked={formData.joinCellGroup.includes('No')}
-                                onChange={handleChange}
-                            />
-                            No
-                        </label>
-                    </div>
-                </div>
-                {errors.joinCellGroup && <p className="error-message-radio">{errors.joinCellGroup}</p>}
-            </div>
 
             <hr /> {}
 
