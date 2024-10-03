@@ -61,7 +61,6 @@ const RegisterForm = () => {
         });
     };
 
-
     const fetchAgeRanges = async () => {
         axios.get('/ageranges')
             .then(response => {
@@ -83,13 +82,28 @@ const RegisterForm = () => {
     }
 
     const fetchQuestions = async () => {
-        axios.get('/questions')
-            .then(response => {
-                setQuestions(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching questions:', error);
-            })
+        try {
+            const response = await axios.get('/questions');
+            setQuestions(response.data);
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (questions.length > 0) {
+            initializeResponses();
+        }
+    }, [questions]);
+
+    const initializeResponses = async () => {
+        setFormData((prevUser) => ({
+            ...prevUser,
+            responses : questions.map(q => ({
+                QuestionId: q.Id,
+                ResponseId: null
+            }))
+        }))
     }
 
     // Validate the form
