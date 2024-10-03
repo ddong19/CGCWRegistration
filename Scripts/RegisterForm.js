@@ -112,24 +112,24 @@ const RegisterForm = () => {
     // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (validate()) {
-            console.log("Form data submitted:", formData);
-            axios.post('/Register', formData)
-                .then(response => {
-                    if (response.data.success) {
-                        console.log(response.data.message);
+//        if (validate()) {
+        console.log("Form data submitted:", formData);
+        axios.post('/Register', formData)
+            .then(response => {
+                if (response.data.success) {
+                    console.log(response.data.message);
 /*                        this.resetForm();*/
-                    } else {
-                        errors = response.data.error || {};
-                        console.log(errors);
-                    }
-                })
-                .catch(error => {
-                    console.error('Submission error:', errors);
-                    errors = (error.response && error.response.data && error.response.data.errors) || {};
-                    console.log("Error details:", errors)
-                });
-        }
+                } else {
+                    errors = response.data.error || {};
+                    console.log(errors);
+                }
+            })
+            .catch(error => {
+                console.error('Submission error:', errors);
+                errors = (error.response && error.response.data && error.response.data.errors) || {};
+                console.log("Error details:", errors)
+            });
+//        }
     };
 
     return (

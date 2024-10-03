@@ -214,8 +214,10 @@
                 },
                 submitForm() {
                     console.log("Submitting");
+                    console.log("This User: ", this.user)
                     axios.post('/Register', this.user)
                         .then(response => {
+                            console.log(response.data)
                             if (response.data.success) {
                                 console.log(response.data.message);
                                 this.resetForm();

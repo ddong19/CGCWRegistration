@@ -272,8 +272,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\RegisterForm - Copy.js" />
-    <Content Include="Scripts\RegisterForm - Copy.css" />
     <Content Include="Scripts\RegisterForm.js" />
     <Content Include="Scripts\RegisterForm.css" />
     <Content Include="Scripts\RegisterFormMVC.js" />
@@ -353,9 +351,9 @@
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
-  <Target Name="PreBuild" BeforeTargets="Build">
+  <!-- <Target Name="PreBuild" BeforeTargets="Build">
     <Exec Command="npm run build" />
-  </Target>
+  </Target> -->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
